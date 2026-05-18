@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEON_SETLIST — Live Track ID</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600;700;900&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --acid: #c3f400;
+  --acid-dim: #8aab00;
+  --cyan: #00e0ff;
+  --bg: #080808;
+  --surface: #111111;
+  --surface2: #181818;
+  --surface3: #222222;
+  --border: #2a2a2a;
+  --border2: #383c2a;
+  --text: #e5e2e1;
+  --text-dim: #8e9379;
+  --red: #ff4444;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Geist', sans-serif;
+  min-height: 100dvh;
+  overflow-x: hidden;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  user-select: none;
+  vertical-align: middle;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--acid); }
+
+/* ── LAYOUT ── */
+.app { display: flex; flex-direction: column; min-height: 100dvh; }
+
+/* ── HEADER ── */
+header {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(8,8,8,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  height: 56px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 20px;
+}
+.logo {
+  font-family: 'JetBrains Mono'; font-size: 16px; font-weight: 700;
+  color: var(--acid); letter-spacing: -0.02em;
+}
+.logo span { color: var(--text-dim); font-weight: 400; }
+.header-right { display: flex; align-items: center; gap: 12px; }
+.live-dot {
+  display: flex; align-items: center; gap: 6px;
+  font-family: 'JetBrains Mono'; font-size: 10px; color: var(--acid);
+  letter-spacing: 0.1em;
+}
+.dot {
+  width: 6px; height: 6px; border-radius: 50%; background: var(--acid);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.2;} }
+
+/* ── MAIN GRID ── */
+.main-grid {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 0;
+  flex: 1;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 20px;
+  gap: 20px;
+  align-items: flex-start;
+}
+@media (max-width: 900px) {
+  .main-grid { grid-template-columns: 1fr; }
+}
+
+/* ── LEFT COLUMN ── */
+.left-col { display: flex; flex-direction: column; gap: 16px; }
+
+/* URL INPUT */
+.url-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+}
+.url-label {
+  font-family: 'JetBrains Mono'; font-size: 9px; color: var(--text-dim);
+  letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 8px;
+  display: block;
+}
+.url-row { display: flex; gap: 8px; }
+.url-input {
+  flex: 1;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 10px 14px;
+  font-family: 'JetBrains Mono'; font-size: 12px;
+  border-radius: 4px; outline: none;
+  transition: border-color 0.15s;
+}
+.url-input:focus { border-color: var(--acid); }
+.url-input::placeholder { color: var(--text-dim); }
+.btn-load {
+  background: var(--acid); color: #1a2000;
+  font-family: 'JetBrains Mono'; font-size: 11px; font-weight: 700;
+  letter-spacing: 0.08em; padding: 10px 16px;
+  border: none; border-radius: 4px; cursor: pointer;
+  display: flex; align-items: center; gap: 6px;
+  white-space: nowrap; transition: all 0.15s;
+}
+.btn-load:hover { background: #d4ff1a; }
+.btn-load:active { transform: scale(0.97); }
+
+/* YOUTUBE PLAYER */
+.player-wrap {
+  background: #000;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  aspect-ratio: 16/9;
+}
+.player-placeholder {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 12px;
+  background: var(--surface);
+}
+.player-placeholder .material-symbols-outlined {
+  font-size: 48px; color: var(--border2);
+}
+.player-placeholder p {
+  font-family: 'JetBrains Mono'; font-size: 11px;
+  color: var(--text-dim); letter-spacing: 0.08em;
+  text-align: center; padding: 0 20px;
+}
+#yt-player { width: 100%; height: 100%; border: none; display: none; }
+
+/* LISTEN CONTROLS */
+.listen-controls {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+}
+.controls-row {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+}
+.btn-listen {
+  flex: 1; min-width: 160px;
+  height: 52px;
+  background: var(--acid); color: #1a2000;
+  font-family: 'JetBrains Mono'; font-size: 12px; font-weight: 700;
+  letter-spacing: 0.08em;
+  border: none; border-radius: 6px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  transition: all 0.2s;
+}
+.btn-listen:hover { background: #d4ff1a; }
+.btn-listen:active { transform: scale(0.97); }
+.btn-listen.listening {
+  background: transparent;
+  border: 2px solid var(--red);
+  color: var(--red);
+  animation: listenPulse 2s ease-in-out infinite;
+}
+@keyframes listenPulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(255,68,68,0.4); }
+  50% { box-shadow: 0 0 0 8px rgba(255,68,68,0); }
+}
+.btn-stop {
+  height: 52px; padding: 0 20px;
+  background: transparent; color: var(--text-dim);
+  font-family: 'JetBrains Mono'; font-size: 11px; font-weight: 600;
+  letter-spacing: 0.08em;
+  border: 1px solid var(--border); border-radius: 6px; cursor: pointer;
+  display: flex; align-items: center; gap: 6px;
+  transition: all 0.15s;
+}
+.btn-stop:hover { border-color: var(--text-dim); color: var(--text); }
+
+.status-bar {
+  margin-top: 12px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 8px;
+}
+.status-text {
+  font-family: 'JetBrains Mono'; font-size: 10px;
+  color: var(--text-dim); letter-spacing: 0.08em;
+}
+.status-text.active { color: var(--acid); }
+.status-text.error { color: #ff7a7a; }
+
+.interval-info {
+  font-family: 'JetBrains Mono'; font-size: 10px;
+  color: var(--text-dim); letter-spacing: 0.06em;
+}
+
+/* Scan progress */
+.scan-progress {
+  height: 2px; background: var(--border);
+  border-radius: 2px; overflow: hidden; margin-top: 8px;
+  display: none;
+}
+.scan-progress.active { display: block; }
+.scan-fill {
+  height: 100%; background: var(--acid);
+  border-radius: 2px; width: 0%;
+  transition: width 0.1s linear;
+}
+
+/* NOW IDENTIFIED */
+.now-id {
+  background: var(--surface);
+  border: 2px solid var(--acid);
+  border-radius: 8px;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+  display: none;
+}
+.now-id.visible { display: block; }
+.now-id::before {
+  content: '';
+  position: absolute; top: -60px; right: -60px;
+  width: 160px; height: 160px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(195,244,0,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.now-id-label {
+  font-family: 'JetBrains Mono'; font-size: 9px;
+  color: var(--acid); letter-spacing: 0.15em;
+  margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+}
+.id-row { display: flex; gap: 16px; align-items: flex-start; }
+.id-art {
+  width: 72px; height: 72px; border-radius: 4px;
+  background: var(--surface3); flex-shrink: 0;
+  overflow: hidden; display: flex; align-items: center; justify-content: center;
+  font-size: 28px;
+}
+.id-art img { width: 100%; height: 100%; object-fit: cover; }
+.id-info { flex: 1; min-width: 0; }
+.id-title {
+  font-family: 'Space Grotesk'; font-size: clamp(16px, 3vw, 22px);
+  font-weight: 700; color: var(--acid);
+  text-shadow: 0 0 12px rgba(195,244,0,0.4);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  line-height: 1.2; margin-bottom: 4px;
+}
+.id-artist {
+  font-size: 14px; color: var(--text-dim); margin-bottom: 10px;
+}
+.id-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.id-tag {
+  font-family: 'JetBrains Mono'; font-size: 9px;
+  letter-spacing: 0.08em; font-weight: 700;
+  padding: 3px 8px; border-radius: 3px;
+}
+.id-tag.bpm { background: rgba(195,244,0,0.15); color: var(--acid); border: 1px solid rgba(195,244,0,0.3); }
+.id-tag.key { background: rgba(0,224,255,0.12); color: var(--cyan); border: 1px solid rgba(0,224,255,0.3); }
+.id-tag.label { background: var(--surface3); color: var(--text-dim); border: 1px solid var(--border); }
+.id-tag.source { background: var(--surface3); color: var(--text-dim); border: 1px solid var(--border); }
+
+.id-confidence {
+  margin-top: 12px; padding-top: 12px;
+  border-top: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px;
+}
+.conf-label {
+  font-family: 'JetBrains Mono'; font-size: 9px;
+  color: var(--text-dim); letter-spacing: 0.1em; white-space: nowrap;
+}
+.conf-bar { flex: 1; height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
+.conf-fill { height: 100%; background: var(--acid); border-radius: 2px; transition: width 0.5s; }
+.conf-pct {
+  font-family: 'JetBrains Mono'; font-size: 10px;
+  font-weight: 700; color: var(--acid); min-width: 32px; text-align: right;
+}
+
+/* WAVEFORM VISUALIZER */
+.visualizer {
+  height: 48px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  display: flex; align-items: center;
+  padding: 4px 8px; gap: 2px;
+  margin-top: 12px;
+}
+.viz-bar {
+  flex: 1; border-radius: 1px;
+  background: var(--acid);
+  height: 20%; opacity: 0.4;
+  transition: height 0.1s, opacity 0.1s;
+  min-height: 2px;
+}
+.viz-bar.active { opacity: 1; animation: vizPulse 0.4s ease-in-out infinite alternate; }
+@keyframes vizPulse {
+  from { height: var(--h-from, 20%); }
+  to { height: var(--h-to, 80%); }
+}
+
+/* ── API KEY SETUP ── */
+.setup-card {
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  padding: 16px;
+}
+.setup-title {
+  font-family: 'JetBrains Mono'; font-size: 11px; font-weight: 700;
+  color: var(--acid); letter-spacing: 0.1em;
+  margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+}
+.setup-row { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+.setup-label {
+  font-family: 'JetBrains Mono'; font-size: 9px;
+  color: var(--text-dim); letter-spacing: 0.1em;
+}
+.setup-input {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 8px 12px;
+  font-family: 'JetBrains Mono'; font-size: 11px;
+  border-radius: 4px; outline: none;
+  transition: border-color 0.15s; width: 100%;
+}
+.setup-input:focus { border-color: var(--acid); }
+.setup-input::placeholder { color: var(--text-dim); font-size: 10px; }
+.btn-save-key {
+  width: 100%; padding: 9px;
+  background: var(--acid); color: #1a2000;
+  font-family: 'JetBrains Mono'; font-size: 11px; font-weight: 700;
+  letter-spacing: 0.08em; border: none; border-radius: 4px;
+  cursor: pointer; transition: all 0.15s;
+}
+.btn-save-key:hover { background: #d4ff1a; }
+.setup-hint {
+  font-family: 'JetBrains Mono'; font-size: 9px;
+  color: var(--text-dim); letter-spacing: 0.04em;
+  line-height: 1.5; margin-top: 8px;
+}
+.setup-hint a { color: var(--cyan); text-decoration: none; }
+.setup-hint a:hover { text-decoration: underline; }
+.key-saved {
+  display: flex; align-items: center; gap: 6px;
+  font-family: 'JetBrains Mono'; font-size: 10px;
+  color: var(--acid); letter-spacing: 0.08em;
+}
+
+/* ── RIGHT COLUMN — TRACKLIST ── */
+.right-col { display: flex; flex-direction: column; gap: 16px; }
+
+.tracklist-header {
+  display: flex; align-items: center; justify-content: space-between;
+}
+.tracklist-title {
+  font-family: 'JetBrains Mono'; font-size: 11px;
+  color: var(--text-dim); letter-spacing: 0.12em;
+  display: flex; align-items: center; gap: 8px;
+}
+.tracklist-count {
+  font-family: 'JetBrains Mono'; font-size: 10px; color: var(--acid);
+}
+.btn-clear {
+  background: none; border: 1px solid var(--border);
+  color: var(--text-dim); font-family: 'JetBrains Mono';
+  font-size: 9px; letter-spacing: 0.08em;
+  padding: 4px 10px; border-radius: 4px; cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-clear:hover { border-color: #ff7a7a; color: #ff7a7a; }
+
+.tracklist {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  min-height: 200px;
+}
+.tracklist-empty {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 48px 20px; gap: 10px;
+  text-align: center;
+}
+.tracklist-empty .material-symbols-outlined { font-size: 36px; color: var(--border2); }
+.tracklist-empty p {
+  font-family: 'JetBrains Mono'; font-size: 10px;
+  color: var(--text-dim); letter-spacing: 0.08em; line-height: 1.6;
+}
+
+.track-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.15s;
+  animation: slideIn 0.3s ease-out;
+}
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.track-item:hover { background: var(--surface2); }
+.track-item:last-child { border-bottom: none; }
+.track-item.new-id { border-left: 3px solid var(--acid); background: rgba(195,244,0,0.04); }
+
+.track-num {
+  font-family: 'JetBrains Mono'; font-size: 10px;
+  color: var(--text-dim); min-width: 20px; text-align: center;
+}
+.track-thumb {
+  width: 40px; height: 40px; border-radius: 3px;
+  background: var(--surface3); flex-shrink: 0;
+  overflow: hidden; display: flex; align-items: center;
+  justify-content: center; font-size: 16px;
+}
+.track-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.track-meta { flex: 1; min-width: 0; }
+.track-name {
+  font-size: 12px; font-weight: 700; color: var(--text);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  margin-bottom: 2px;
+}
+.track-artist {
+  font-family: 'JetBrains Mono'; font-size: 9px;
+  color: var(--text-dim); text-transform: uppercase;
+  letter-spacing: 0.06em; white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis;
+}
+.track-data { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; flex-shrink: 0; }
+.track-bpm {
+  font-family: 'JetBrains Mono'; font-size: 11px;
+  font-weight: 700; color: var(--acid);
+}
+.track-key {
+  font-family: 'JetBrains Mono'; font-size: 10px; color: var(--cyan);
+}
+.track-time {
+  font-family: 'JetBrains Mono'; font-size: 9px; color: var(--text-dim);
+}
+
+/* EXPORT */
+.export-row { display: flex; gap: 8px; }
+.btn-export {
+  flex: 1; padding: 10px;
+  font-family: 'JetBrains Mono'; font-size: 10px; font-weight: 700;
+  letter-spacing: 0.08em; border-radius: 4px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  transition: all 0.15s;
+}
+.btn-export.primary { background: var(--acid); color: #1a2000; border: none; }
+.btn-export.primary:hover { background: #d4ff1a; }
+.btn-export.secondary {
+  background: transparent; color: var(--text-dim);
+  border: 1px solid var(--border);
+}
+.btn-export.secondary:hover { border-color: var(--text-dim); color: var(--text); }
+
+/* STATS ROW */
+.stats-row {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+}
+.stat-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px; padding: 12px;
+}
+.stat-label {
+  font-family: 'JetBrains Mono'; font-size: 8px;
+  color: var(--text-dim); letter-spacing: 0.12em;
+  text-transform: uppercase; margin-bottom: 4px;
+}
+.stat-val {
+  font-family: 'JetBrains Mono'; font-size: 18px;
+  font-weight: 700; color: var(--acid);
+  text-shadow: 0 0 10px rgba(195,244,0,0.3);
+}
+.stat-val.cyan { color: var(--cyan); text-shadow: 0 0 10px rgba(0,224,255,0.3); }
+
+/* NOTIFICATION */
+#notif {
+  position: fixed; top: 70px; right: 20px; z-index: 500;
+  background: var(--surface2); border: 1px solid var(--acid);
+  border-radius: 6px; padding: 10px 14px;
+  font-family: 'JetBrains Mono'; font-size: 11px;
+  color: var(--acid); letter-spacing: 0.06em;
+  transform: translateX(120%); transition: transform 0.3s ease;
+  max-width: 260px;
+}
+#notif.show { transform: translateX(0); }
+
+/* SCANNING ANIMATION */
+.scanning-ring {
+  width: 20px; height: 20px; border-radius: 50%;
+  border: 2px solid var(--red);
+  border-top-color: transparent;
+  animation: spin 0.8s linear infinite;
+  flex-shrink: 0;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* HOW IT WORKS */
+.how-it-works {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px; padding: 16px;
+}
+.how-title {
+  font-family: 'JetBrains Mono'; font-size: 9px;
+  color: var(--text-dim); letter-spacing: 0.15em;
+  margin-bottom: 10px;
+}
+.steps { display: flex; flex-direction: column; gap: 8px; }
+.step {
+  display: flex; align-items: flex-start; gap: 10px;
+}
+.step-num {
+  font-family: 'JetBrains Mono'; font-size: 9px; font-weight: 700;
+  color: #1a2000; background: var(--acid);
+  width: 18px; height: 18px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 1px;
+}
+.step-text {
+  font-family: 'JetBrains Mono'; font-size: 10px;
+  color: var(--text-dim); letter-spacing: 0.04em; line-height: 1.5;
+}
+.step-text strong { color: var(--text); }
+
+@media (max-width: 600px) {
+  .main-grid { padding: 12px; gap: 12px; }
+  .stats-row { grid-template-columns: repeat(3, 1fr); }
+  .url-row { flex-direction: column; }
+  .btn-load { justify-content: center; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- HEADER -->
+<header>
+  <div class="logo">NEON_SETLIST <span>/ TRACK ID</span></div>
+  <div class="header-right">
+    <div class="live-dot" id="live-indicator" style="display:none;">
+      <div class="dot"></div>
+      IDENTIFYING
+    </div>
+    <span class="material-symbols-outlined" style="color: var(--text-dim); font-size: 20px;">sensors</span>
+  </div>
+</header>
+
+<!-- NOTIFICATION -->
+<div id="notif"></div>
+
+<!-- MAIN -->
+<div class="main-grid">
+
+  <!-- ── LEFT ── -->
+  <div class="left-col">
+
+    <!-- API KEY SETUP -->
+    <div class="setup-card" id="setup-card">
+      <div class="setup-title">
+        <span class="material-symbols-outlined" style="font-size:16px;">key</span>
+        ACRCloud API Setup
+      </div>
+      <div id="key-form">
+        <div class="setup-row">
+          <span class="setup-label">HOST (e.g. identify-eu-west-1.acrcloud.com)</span>
+          <input class="setup-input" id="acr-host" placeholder="identify-eu-west-1.acrcloud.com" type="text">
+        </div>
+        <div class="setup-row">
+          <span class="setup-label">ACCESS KEY</span>
+          <input class="setup-input" id="acr-key" placeholder="Your ACRCloud Access Key" type="text">
+        </div>
+        <div class="setup-row">
+          <span class="setup-label">ACCESS SECRET</span>
+          <input class="setup-input" id="acr-secret" placeholder="Your ACRCloud Access Secret" type="password">
+        </div>
+        <button class="btn-save-key" onclick="saveAPIKeys()">SAVE & ACTIVATE</button>
+        <div class="setup-hint">
+          Free account at <a href="https://www.acrcloud.com" target="_blank">acrcloud.com</a> →
+          Create Project → Audio &amp; Video Recognition → copy Host, Key, Secret.<br>
+          Free tier = 2,000 recognitions/month. Keys are saved locally, never sent anywhere except ACRCloud.
+        </div>
+      </div>
+      <div id="key-saved" class="key-saved" style="display:none;">
+        <span class="material-symbols-outlined" style="font-size:16px; color:var(--acid);">check_circle</span>
+        API keys saved — ready to identify tracks
+        <button onclick="resetKeys()" style="background:none;border:none;cursor:pointer;color:var(--text-dim);font-family:'JetBrains Mono';font-size:9px;letter-spacing:0.08em;margin-left:auto;" onmouseover="this.style.color='#ff7a7a'" onmouseout="this.style.color='var(--text-dim)'">RESET</button>
+      </div>
+    </div>
+
+    <!-- YOUTUBE URL -->
+    <div class="url-section">
+      <span class="url-label">YouTube Live Set URL</span>
+      <div class="url-row">
+        <input class="url-input" id="yt-url" type="text"
+          placeholder="https://www.youtube.com/watch?v=... or youtu.be/...">
+        <button class="btn-load" onclick="loadVideo()">
+          <span class="material-symbols-outlined" style="font-size:18px;">play_arrow</span>
+          LOAD
+        </button>
+      </div>
+    </div>
+
+    <!-- PLAYER -->
+    <div class="player-wrap">
+      <div class="player-placeholder" id="player-placeholder">
+        <span class="material-symbols-outlined">youtube_activity</span>
+        <p>Paste a YouTube link above and click LOAD to start the live set</p>
+      </div>
+      <iframe id="yt-player"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen>
+      </iframe>
+    </div>
+
+    <!-- LISTEN CONTROLS -->
+    <div class="listen-controls">
+      <div class="controls-row">
+        <button class="btn-listen" id="listen-btn" onclick="toggleListening()">
+          <span class="material-symbols-outlined" style="font-size:20px;">mic</span>
+          START IDENTIFYING
+        </button>
+        <button class="btn-stop" onclick="stopListening()" id="stop-btn" style="display:none;">
+          <span class="material-symbols-outlined" style="font-size:18px;">stop</span>
+          STOP
+        </button>
+      </div>
+
+      <div class="scan-progress" id="scan-progress">
+        <div class="scan-fill" id="scan-fill"></div>
+      </div>
+
+      <div class="status-bar">
+        <span class="status-text" id="status-text">Press START to begin identifying tracks via microphone</span>
+        <span class="interval-info" id="interval-info">Scans every 15s</span>
+      </div>
+
+      <!-- Visualizer -->
+      <div class="visualizer" id="visualizer"></div>
+    </div>
+
+    <!-- NOW IDENTIFIED -->
+    <div class="now-id" id="now-id">
+      <div class="now-id-label">
+        <div class="scanning-ring" id="id-ring" style="display:none;"></div>
+        <span class="material-symbols-outlined" style="font-size:14px;">graphic_eq</span>
+        IDENTIFIED TRACK
+      </div>
+      <div class="id-row">
+        <div class="id-art" id="id-art">🎵</div>
+        <div class="id-info">
+          <div class="id-title" id="id-title">—</div>
+          <div class="id-artist" id="id-artist">—</div>
+          <div class="id-tags">
+            <span class="id-tag bpm" id="id-bpm" style="display:none;"></span>
+            <span class="id-tag key" id="id-key" style="display:none;"></span>
+            <span class="id-tag label" id="id-label" style="display:none;"></span>
+            <span class="id-tag source" id="id-source" style="display:none;"></span>
+          </div>
+        </div>
+      </div>
+      <div class="id-confidence">
+        <span class="conf-label">MATCH CONFIDENCE</span>
+        <div class="conf-bar"><div class="conf-fill" id="conf-fill"></div></div>
+        <span class="conf-pct" id="conf-pct">—</span>
+      </div>
+    </div>
+
+    <!-- HOW IT WORKS -->
+    <div class="how-it-works">
+      <div class="how-title">HOW IT WORKS</div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-text"><strong>Get free API keys</strong> from acrcloud.com — free tier is 2,000 scans/month</div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-text"><strong>Paste a YouTube link</strong> — any DJ set, mix, or live stream works</div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-text"><strong>Click START IDENTIFYING</strong> — allow mic access — <strong>hold your phone near the speaker</strong> or use system audio on desktop</div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-text">Every <strong>15 seconds</strong> it fingerprints the audio and identifies the track automatically</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── RIGHT ── -->
+  <div class="right-col">
+
+    <!-- STATS -->
+    <div class="stats-row">
+      <div class="stat-box">
+        <div class="stat-label">Tracks ID'd</div>
+        <div class="stat-val" id="stat-count">0</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-label">Avg BPM</div>
+        <div class="stat-val" id="stat-bpm">—</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-label">Scans</div>
+        <div class="stat-val cyan" id="stat-scans">0</div>
+      </div>
+    </div>
+
+    <!-- TRACKLIST -->
+    <div class="tracklist-header">
+      <div class="tracklist-title">
+        <span class="material-symbols-outlined" style="font-size:16px;">queue_music</span>
+        IDENTIFIED TRACKLIST
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <span class="tracklist-count" id="track-count">0 tracks</span>
+        <button class="btn-clear" onclick="clearTracklist()">CLEAR</button>
+      </div>
+    </div>
+
+    <div class="tracklist" id="tracklist">
+      <div class="tracklist-empty" id="tracklist-empty">
+        <span class="material-symbols-outlined">track_changes</span>
+        <p>Identified tracks will appear here<br>automatically as the set plays</p>
+      </div>
+    </div>
+
+    <!-- EXPORT -->
+    <div class="export-row">
+      <button class="btn-export primary" onclick="exportTracklist('txt')">
+        <span class="material-symbols-outlined" style="font-size:16px;">description</span>
+        EXPORT TXT
+      </button>
+      <button class="btn-export secondary" onclick="exportTracklist('csv')">
+        <span class="material-symbols-outlined" style="font-size:16px;">download</span>
+        CSV
+      </button>
+      <button class="btn-export secondary" onclick="copyTracklist()">
+        <span class="material-symbols-outlined" style="font-size:16px;">content_copy</span>
+        COPY
+      </button>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<script>
+// ═══════════════════════════════════
+// STATE
+// ═══════════════════════════════════
+let isListening = false;
+let mediaStream = null;
+let audioContext = null;
+let analyser = null;
+let scanInterval = null;
+let scanProgressInterval = null;
+let scanTimer = 0;
+let totalScans = 0;
+let tracklist = [];
+let lastTrackId = null; // avoid duplicate consecutive IDs
+let vizInterval = null;
+
+const SCAN_EVERY = 15; // seconds
+const RECORD_DURATION = 10; // seconds of audio to capture
+
+// ACRCloud credentials
+let ACR = {
+  host: '',
+  key: '',
+  secret: ''
+};
+
+// Load saved keys
+function loadKeys() {
+  const saved = localStorage.getItem('ns_acr');
+  if (saved) {
+    try {
+      ACR = JSON.parse(saved);
+      if (ACR.host && ACR.key && ACR.secret) {
+        showKeySaved();
+        return true;
+      }
+    } catch(e) {}
+  }
+  return false;
+}
+
+function saveAPIKeys() {
+  const host = document.getElementById('acr-host').value.trim();
+  const key = document.getElementById('acr-key').value.trim();
+  const secret = document.getElementById('acr-secret').value.trim();
+
+  if (!host || !key || !secret) {
+    notify('Please fill in all three fields');
+    return;
+  }
+
+  ACR = { host, key, secret };
+  localStorage.setItem('ns_acr', JSON.stringify(ACR));
+  showKeySaved();
+  notify('API KEYS SAVED ✓');
+}
+
+function showKeySaved() {
+  document.getElementById('key-form').style.display = 'none';
+  document.getElementById('key-saved').style.display = 'flex';
+}
+
+function resetKeys() {
+  localStorage.removeItem('ns_acr');
+  ACR = { host: '', key: '', secret: '' };
+  document.getElementById('key-form').style.display = 'block';
+  document.getElementById('key-saved').style.display = 'none';
+  notify('API keys cleared');
+}
+
+// ═══════════════════════════════════
+// YOUTUBE LOADER
+// ═══════════════════════════════════
+function loadVideo() {
+  const url = document.getElementById('yt-url').value.trim();
+  if (!url) { notify('Paste a YouTube URL first'); return; }
+
+  const id = extractYouTubeId(url);
+  if (!id) { notify('Could not parse YouTube URL'); return; }
+
+  const iframe = document.getElementById('yt-player');
+  iframe.src = `https://www.youtube.com/embed/${id}?autoplay=1&rel=0`;
+  iframe.style.display = 'block';
+  document.getElementById('player-placeholder').style.display = 'none';
+  notify('VIDEO LOADED — Hit START IDENTIFYING when ready');
+}
+
+function extractYouTubeId(url) {
+  const patterns = [
+    /(?:v=|\/embed\/|\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/,
+    /^([a-zA-Z0-9_-]{11})$/
+  ];
+  for (const p of patterns) {
+    const m = url.match(p);
+    if (m) return m[1];
+  }
+  return null;
+}
+
+// ═══════════════════════════════════
+// VISUALIZER
+// ═══════════════════════════════════
+function buildVisualizer() {
+  const viz = document.getElementById('visualizer');
+  viz.innerHTML = '';
+  for (let i = 0; i < 40; i++) {
+    const bar = document.createElement('div');
+    bar.className = 'viz-bar';
+    viz.appendChild(bar);
+  }
+}
+
+function updateVisualizer(active) {
+  const bars = document.querySelectorAll('.viz-bar');
+  if (!active || !analyser) {
+    bars.forEach(b => {
+      b.style.height = '8%';
+      b.style.opacity = '0.2';
+      b.classList.remove('active');
+    });
+    return;
+  }
+
+  const data = new Uint8Array(analyser.frequencyBinCount);
+  analyser.getByteFrequencyData(data);
+
+  bars.forEach((bar, i) => {
+    const idx = Math.floor(i * data.length / bars.length);
+    const val = data[idx] / 255;
+    bar.style.height = Math.max(4, val * 100) + '%';
+    bar.style.opacity = 0.3 + val * 0.7;
+  });
+}
+
+// ═══════════════════════════════════
+// LISTENING
+// ═══════════════════════════════════
+async function toggleListening() {
+  if (!ACR.host || !ACR.key || !ACR.secret) {
+    notify('Set up your ACRCloud API keys first');
+    document.getElementById('acr-host').focus();
+    return;
+  }
+  if (isListening) { stopListening(); return; }
+  await startListening();
+}
+
+async function startListening() {
+  try {
+    mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+  } catch(e) {
+    setStatus('Microphone access denied — please allow mic in browser settings', 'error');
+    notify('MIC ACCESS DENIED');
+    return;
+  }
+
+  // Set up audio context + analyser for visualizer
+  audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  const source = audioContext.createMediaStreamSource(mediaStream);
+  analyser = audioContext.createAnalyser();
+  analyser.fftSize = 256;
+  source.connect(analyser);
+
+  isListening = true;
+  document.getElementById('listen-btn').style.display = 'none';
+  document.getElementById('stop-btn').style.display = 'flex';
+  document.getElementById('live-indicator').style.display = 'flex';
+  document.getElementById('scan-progress').classList.add('active');
+  document.getElementById('now-id').classList.add('visible');
+  document.getElementById('id-ring').style.display = 'flex';
+
+  setStatus('Listening... first scan in 15 seconds', 'active');
+
+  // Visualizer loop
+  vizInterval = setInterval(() => updateVisualizer(true), 80);
+
+  // Scan immediately after 3 seconds, then every SCAN_EVERY
+  setTimeout(() => {
+    if (isListening) doScan();
+  }, 3000);
+
+  scanTimer = 0;
+  scanInterval = setInterval(() => {
+    scanTimer++;
+    const pct = (scanTimer / SCAN_EVERY) * 100;
+    document.getElementById('scan-fill').style.width = pct + '%';
+    document.getElementById('interval-info').textContent = `Next scan in ${SCAN_EVERY - scanTimer}s`;
+
+    if (scanTimer >= SCAN_EVERY) {
+      scanTimer = 0;
+      doScan();
+    }
+  }, 1000);
+}
+
+function stopListening() {
+  isListening = false;
+
+  if (scanInterval) { clearInterval(scanInterval); scanInterval = null; }
+  if (vizInterval) { clearInterval(vizInterval); vizInterval = null; }
+  if (mediaStream) { mediaStream.getTracks().forEach(t => t.stop()); mediaStream = null; }
+  if (audioContext) { audioContext.close(); audioContext = null; }
+
+  document.getElementById('listen-btn').style.display = 'flex';
+  document.getElementById('stop-btn').style.display = 'none';
+  document.getElementById('live-indicator').style.display = 'none';
+  document.getElementById('scan-progress').classList.remove('active');
+  document.getElementById('scan-fill').style.width = '0%';
+  document.getElementById('id-ring').style.display = 'none';
+  document.getElementById('interval-info').textContent = 'Scans every 15s';
+
+  updateVisualizer(false);
+  setStatus('Stopped. ' + tracklist.length + ' tracks identified this session.');
+  notify('STOPPED — ' + tracklist.length + ' TRACKS IDENTIFIED');
+}
+
+// ═══════════════════════════════════
+// SCAN + FINGERPRINT
+// ═══════════════════════════════════
+async function doScan() {
+  if (!isListening || !mediaStream) return;
+
+  totalScans++;
+  document.getElementById('stat-scans').textContent = totalScans;
+  setStatus('Scanning... recording ' + RECORD_DURATION + 's of audio', 'active');
+
+  // Record audio
+  let audioBlob;
+  try {
+    audioBlob = await recordAudio(RECORD_DURATION * 1000);
+  } catch(e) {
+    setStatus('Recording failed: ' + e.message, 'error');
+    return;
+  }
+
+  setStatus('Sending to ACRCloud for identification...', 'active');
+
+  // Build the ACRCloud request
+  try {
+    const result = await queryACRCloud(audioBlob);
+    handleACRResult(result);
+  } catch(e) {
+    setStatus('ACRCloud error: ' + e.message, 'error');
+    console.error('ACRCloud error:', e);
+  }
+}
+
+function recordAudio(durationMs) {
+  return new Promise((resolve, reject) => {
+    if (!mediaStream) { reject(new Error('No media stream')); return; }
+
+    const recorder = new MediaRecorder(mediaStream, {
+      mimeType: getSupportedMimeType()
+    });
+    const chunks = [];
+
+    recorder.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
+    recorder.onstop = () => resolve(new Blob(chunks, { type: recorder.mimeType }));
+    recorder.onerror = e => reject(e.error);
+
+    recorder.start();
+    setTimeout(() => {
+      if (recorder.state !== 'inactive') recorder.stop();
+    }, durationMs);
+  });
+}
+
+function getSupportedMimeType() {
+  const types = ['audio/webm;codecs=opus', 'audio/webm', 'audio/ogg;codecs=opus', 'audio/mp4'];
+  for (const t of types) {
+    if (MediaRecorder.isTypeSupported(t)) return t;
+  }
+  return '';
+}
+
+async function queryACRCloud(audioBlob) {
+  // Build signature
+  const timestamp = Math.floor(Date.now() / 1000);
+  const sigString = `POST\n/v1/identify\n${ACR.key}\naudio\n1\n${timestamp}`;
+  const signature = await hmacSHA1(ACR.secret, sigString);
+
+  const formData = new FormData();
+  formData.append('sample', audioBlob, 'sample.webm');
+  formData.append('access_key', ACR.key);
+  formData.append('data_type', 'audio');
+  formData.append('signature_version', '1');
+  formData.append('signature', signature);
+  formData.append('sample_bytes', audioBlob.size);
+  formData.append('timestamp', timestamp);
+
+  const url = `https://${ACR.host}/v1/identify`;
+
+  const response = await fetch(url, {
+    method: 'POST',
+    body: formData
+  });
+
+  if (!response.ok) throw new Error('HTTP ' + response.status);
+  return await response.json();
+}
+
+// HMAC-SHA1 using Web Crypto API
+async function hmacSHA1(secret, message) {
+  const enc = new TextEncoder();
+  const key = await crypto.subtle.importKey(
+    'raw', enc.encode(secret),
+    { name: 'HMAC', hash: 'SHA-1' },
+    false, ['sign']
+  );
+  const sig = await crypto.subtle.sign('HMAC', key, enc.encode(message));
+  return btoa(String.fromCharCode(...new Uint8Array(sig)));
+}
+
+// ═══════════════════════════════════
+// HANDLE RESULTS
+// ═══════════════════════════════════
+function handleACRResult(data) {
+  console.log('ACRCloud response:', data);
+
+  if (data.status && data.status.code === 0 && data.metadata) {
+    const music = data.metadata.music;
+    if (music && music.length > 0) {
+      const track = music[0];
+      processIdentifiedTrack(track, data.metadata);
+    } else {
+      setStatus('No match found — track may be unreleased or exclusive', 'error');
+      notify('NO MATCH — trying again in ' + SCAN_EVERY + 's');
+    }
+  } else if (data.status && data.status.code === 1001) {
+    setStatus('No music detected — make sure audio is playing and mic is picking it up');
+  } else if (data.status && data.status.code === 3003) {
+    setStatus('API quota exceeded — check your ACRCloud plan', 'error');
+    notify('QUOTA EXCEEDED');
+  } else {
+    const msg = data.status ? data.status.msg : 'Unknown error';
+    setStatus('ACRCloud: ' + msg, 'error');
+  }
+}
+
+function processIdentifiedTrack(track, metadata) {
+  const title = track.title || 'Unknown Track';
+  const artist = (track.artists && track.artists[0]) ? track.artists[0].name : (track.artist || 'Unknown Artist');
+  const album = track.album ? track.album.name : '';
+  const label = track.label || '';
+  const bpm = track.tempo || track.bpm || null;
+  const key = track.play_offset_ms ? null : null; // ACRCloud doesn't always return key
+  const confidence = metadata.timestamp_utc ? 100 : (track.score || 85);
+  const artwork = track.album && track.album.artwork ? track.album.artwork[0] : null;
+  const releaseDate = track.release_date || '';
+
+  // Dedupe — don't add same track twice in a row
+  const trackKey = `${title}|${artist}`.toLowerCase();
+  if (trackKey === lastTrackId) {
+    setStatus(`Still playing: ${title} — ${artist}`, 'active');
+    return;
+  }
+  lastTrackId = trackKey;
+
+  // Update Now ID card
+  document.getElementById('id-title').textContent = title;
+  document.getElementById('id-artist').textContent = artist;
+
+  if (artwork) {
+    document.getElementById('id-art').innerHTML = `<img src="${artwork}" alt="artwork" onerror="this.parentElement.textContent='🎵'">`;
+  } else {
+    document.getElementById('id-art').textContent = '🎵';
+  }
+
+  if (bpm) {
+    const bpmEl = document.getElementById('id-bpm');
+    bpmEl.textContent = Math.round(bpm) + ' BPM';
+    bpmEl.style.display = 'inline-flex';
+  }
+
+  if (label) {
+    const labelEl = document.getElementById('id-label');
+    labelEl.textContent = label;
+    labelEl.style.display = 'inline-flex';
+  }
+
+  // Confidence
+  const conf = Math.min(100, Math.round(confidence));
+  document.getElementById('conf-fill').style.width = conf + '%';
+  document.getElementById('conf-pct').textContent = conf + '%';
+
+  // Add to tracklist
+  const entry = {
+    num: tracklist.length + 1,
+    title,
+    artist,
+    album,
+    label,
+    bpm: bpm ? Math.round(bpm) : null,
+    artwork,
+    confidence: conf,
+    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    timestamp: Date.now()
+  };
+
+  tracklist.push(entry);
+  renderTracklist();
+  updateStats();
+
+  setStatus(`✓ Identified: ${title} — ${artist}`, 'active');
+  notify('IDENTIFIED: ' + title.substring(0, 25));
+}
+
+// ═══════════════════════════════════
+// RENDER TRACKLIST
+// ═══════════════════════════════════
+function renderTracklist() {
+  const container = document.getElementById('tracklist');
+  const empty = document.getElementById('tracklist-empty');
+
+  if (tracklist.length === 0) {
+    empty.style.display = 'flex';
+    // Remove all track items
+    container.querySelectorAll('.track-item').forEach(el => el.remove());
+    return;
+  }
+
+  empty.style.display = 'none';
+
+  // Clear and re-render (or just prepend latest)
+  container.querySelectorAll('.track-item').forEach(el => el.remove());
+
+  // Render in reverse (newest first)
+  [...tracklist].reverse().forEach((t, i) => {
+    const el = document.createElement('div');
+    el.className = 'track-item' + (i === 0 ? ' new-id' : '');
+    el.innerHTML = `
+      <div class="track-num">${t.num}</div>
+      <div class="track-thumb">
+        ${t.artwork
+          ? `<img src="${t.artwork}" alt="art" onerror="this.parentElement.textContent='🎵'">`
+          : '🎵'}
+      </div>
+      <div class="track-meta">
+        <div class="track-name">${escHtml(t.title)}</div>
+        <div class="track-artist">${escHtml(t.artist)}</div>
+      </div>
+      <div class="track-data">
+        ${t.bpm ? `<span class="track-bpm">${t.bpm}</span>` : ''}
+        <span class="track-time">${t.time}</span>
+      </div>
+    `;
+    container.appendChild(el);
+  });
+
+  document.getElementById('track-count').textContent = tracklist.length + ' track' + (tracklist.length !== 1 ? 's' : '');
+}
+
+function updateStats() {
+  document.getElementById('stat-count').textContent = tracklist.length;
+
+  const bpms = tracklist.filter(t => t.bpm).map(t => t.bpm);
+  if (bpms.length > 0) {
+    const avg = Math.round(bpms.reduce((a, b) => a + b, 0) / bpms.length);
+    document.getElementById('stat-bpm').textContent = avg;
+  }
+}
+
+function clearTracklist() {
+  if (tracklist.length === 0) return;
+  if (!confirm('Clear all ' + tracklist.length + ' identified tracks?')) return;
+  tracklist = [];
+  lastTrackId = null;
+  renderTracklist();
+  updateStats();
+  document.getElementById('stat-count').textContent = '0';
+  document.getElementById('stat-bpm').textContent = '—';
+  notify('TRACKLIST CLEARED');
+}
+
+// ═══════════════════════════════════
+// EXPORT
+// ═══════════════════════════════════
+function exportTracklist(format) {
+  if (tracklist.length === 0) { notify('No tracks to export'); return; }
+
+  const ytUrl = document.getElementById('yt-url').value.trim();
+  const date = new Date().toLocaleDateString();
+
+  if (format === 'txt') {
+    let txt = `NEON_SETLIST — TRACK ID\n`;
+    txt += `Date: ${date}\n`;
+    if (ytUrl) txt += `Source: ${ytUrl}\n`;
+    txt += `Tracks identified: ${tracklist.length}\n`;
+    txt += `${'─'.repeat(50)}\n\n`;
+    tracklist.forEach(t => {
+      txt += `${String(t.num).padStart(2, '0')}. ${t.title}\n`;
+      txt += `    Artist: ${t.artist}\n`;
+      if (t.bpm) txt += `    BPM: ${t.bpm}\n`;
+      if (t.label) txt += `    Label: ${t.label}\n`;
+      txt += `    Identified at: ${t.time}\n\n`;
+    });
+    downloadFile('tracklist.txt', txt, 'text/plain');
+  } else {
+    const rows = [['#', 'Title', 'Artist', 'BPM', 'Label', 'Time Identified']];
+    tracklist.forEach(t => rows.push([t.num, t.title, t.artist, t.bpm || '', t.label || '', t.time]));
+    const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')).join('\n');
+    downloadFile('tracklist.csv', csv, 'text/csv');
+  }
+
+  notify('EXPORTED ✓');
+}
+
+function copyTracklist() {
+  if (tracklist.length === 0) { notify('No tracks to copy'); return; }
+  const text = tracklist.map(t => `${t.num}. ${t.title} — ${t.artist}${t.bpm ? ` [${t.bpm} BPM]` : ''}`).join('\n');
+  navigator.clipboard.writeText(text).then(() => notify('COPIED TO CLIPBOARD ✓'));
+}
+
+function downloadFile(name, content, type) {
+  const blob = new Blob([content], { type });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = name; a.click();
+}
+
+// ═══════════════════════════════════
+// UTILS
+// ═══════════════════════════════════
+function setStatus(msg, type = '') {
+  const el = document.getElementById('status-text');
+  el.textContent = msg;
+  el.className = 'status-text' + (type ? ' ' + type : '');
+}
+
+let notifTimeout = null;
+function notify(msg) {
+  const el = document.getElementById('notif');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(notifTimeout);
+  notifTimeout = setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+function escHtml(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// Enter key on URL input
+document.getElementById('yt-url').addEventListener('keydown', e => {
+  if (e.key === 'Enter') loadVideo();
+});
+
+// ═══════════════════════════════════
+// INIT
+// ═══════════════════════════════════
+function init() {
+  buildVisualizer();
+  loadKeys();
+  renderTracklist();
+  updateStats();
+
+  console.log('%c NEON_SETLIST TRACK ID ', 'background: #c3f400; color: #1a2000; font-family: monospace; font-weight: bold; padding: 4px 8px;');
+}
+
+init();
+</script>
+</body>
+</html>

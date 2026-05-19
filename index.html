@@ -1,0 +1,2622 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="theme-color" content="#080808">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>NEON_SETLIST — Pro Performance</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;600;700;900&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+    rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    :root {
+      --acid: #c3f400;
+      --cyan: #00e0ff;
+      --red: #ff4455;
+      --orange: #ff8c00;
+      --bg: #080808;
+      --s0: #0d0d0d;
+      --s1: #111;
+      --s2: #181818;
+      --s3: #222;
+      --s4: #2a2a2a;
+      --border: #2a2a2a;
+      --border2: #383c2a;
+      --text: #e5e2e1;
+      --dim: #8e9379;
+      --dim2: #c4c9ac;
+    }
+
+    html,
+    body {
+      height: 100%;
+      overflow: hidden;
+      background: var(--bg);
+    }
+
+    body {
+      color: var(--text);
+      font-family: 'Geist', sans-serif;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .ms {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      user-select: none;
+      vertical-align: middle;
+      flex-shrink: 0;
+      font-family: 'Material Symbols Outlined';
+    }
+
+    .mf {
+      font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+
+    ::-webkit-scrollbar {
+      width: 3px;
+      height: 3px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--border2);
+      border-radius: 2px;
+    }
+
+    ::selection {
+      background: var(--acid);
+      color: #1a2000;
+    }
+
+    /* LAYOUT */
+    .app {
+      display: flex;
+      flex-direction: column;
+      height: 100dvh;
+      overflow: hidden;
+    }
+
+    .header {
+      height: 52px;
+      flex-shrink: 0;
+      z-index: 100;
+      background: rgba(8, 8, 8, 0.96);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+    }
+
+    .logo {
+      font-family: 'JetBrains Mono';
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--acid);
+      letter-spacing: -0.02em;
+    }
+
+    .logo-sub {
+      font-size: 10px;
+      font-weight: 400;
+      color: var(--dim);
+      margin-left: 6px;
+    }
+
+    .hright {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pill {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-family: 'JetBrains Mono';
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      border-radius: 20px;
+      padding: 3px 9px;
+    }
+
+    .pill-green {
+      color: var(--acid);
+      background: rgba(195, 244, 0, 0.08);
+      border: 1px solid rgba(195, 244, 0, 0.2);
+    }
+
+    .pill-red {
+      color: var(--red);
+      background: rgba(255, 68, 85, 0.08);
+      border: 1px solid rgba(255, 68, 85, 0.2);
+    }
+
+    .dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+    }
+
+    .dot-green {
+      background: var(--acid);
+    }
+
+    .dot-red {
+      background: var(--red);
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.2;
+      }
+    }
+
+    .blink {
+      animation: blink 1.5s ease-in-out infinite;
+    }
+
+    .hbtn {
+      width: 34px;
+      height: 34px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      color: var(--dim);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+
+    .hbtn:hover {
+      background: var(--s2);
+      color: var(--text);
+    }
+
+    /* TABS */
+    .tabs {
+      flex-shrink: 0;
+      display: flex;
+      background: var(--s0);
+      border-bottom: 1px solid var(--border);
+      overflow-x: auto;
+    }
+
+    .tabs::-webkit-scrollbar {
+      height: 0;
+    }
+
+    .tab {
+      flex-shrink: 0;
+      padding: 10px 10px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-family: 'JetBrains Mono';
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--dim);
+      border-bottom: 2px solid transparent;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+    }
+
+    .tab .ms {
+      font-size: 14px;
+    }
+
+    .tab:hover {
+      color: var(--dim2);
+    }
+
+    .tab.active {
+      color: var(--acid);
+      border-bottom-color: var(--acid);
+    }
+
+    .tbadge {
+      background: var(--acid);
+      color: #1a2000;
+      font-size: 8px;
+      font-weight: 800;
+      padding: 1px 4px;
+      border-radius: 8px;
+      min-width: 14px;
+      text-align: center;
+    }
+
+    /* PAGES */
+    .pages {
+      flex: 1;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .page {
+      position: absolute;
+      inset: 0;
+      overflow-y: auto;
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    /* SHARED */
+    .card {
+      background: var(--s1);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    .mono {
+      font-family: 'JetBrains Mono';
+    }
+
+    .acid {
+      color: var(--acid);
+    }
+
+    .cyan {
+      color: var(--cyan);
+    }
+
+    .dim {
+      color: var(--dim);
+    }
+
+    .dim2 {
+      color: var(--dim2);
+    }
+
+    .glow {
+      text-shadow: 0 0 12px rgba(195, 244, 0, 0.4);
+    }
+
+    .glow-box {
+      box-shadow: 0 0 20px rgba(195, 244, 0, 0.15);
+    }
+
+    .slabel {
+      font-family: 'JetBrains Mono';
+      font-size: 9px;
+      color: var(--dim);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 4px;
+      cursor: pointer;
+      border: none;
+      transition: all 0.15s;
+      font-family: 'JetBrains Mono';
+      font-weight: 700;
+      letter-spacing: 0.08em;
+    }
+
+    .btn:active {
+      transform: scale(0.97);
+    }
+
+    .btnp {
+      background: var(--acid);
+      color: #1a2000;
+      font-size: 11px;
+      padding: 10px 18px;
+    }
+
+    .btnp:hover {
+      background: #d4ff1a;
+    }
+
+    .btns {
+      background: transparent;
+      color: var(--dim2);
+      font-size: 10px;
+      padding: 9px 14px;
+      border: 1px solid var(--border);
+    }
+
+    .btns:hover {
+      border-color: var(--dim2);
+      color: var(--text);
+    }
+
+    .btnd {
+      border-color: rgba(255, 68, 85, 0.3);
+      color: rgba(255, 68, 85, 0.7);
+    }
+
+    .btnd:hover {
+      border-color: var(--red);
+      color: var(--red);
+    }
+
+    .btnfull {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .btnlg {
+      height: 52px;
+      font-size: 13px;
+      border-radius: 6px;
+    }
+
+    .nsin {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 9px 12px;
+      font-family: 'JetBrains Mono';
+      font-size: 11px;
+      border-radius: 4px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    .nsin:focus {
+      border-color: var(--acid);
+    }
+
+    .nsin::placeholder {
+      color: var(--dim);
+      font-size: 10px;
+    }
+
+    .nssel {
+      background: var(--s2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 8px 10px;
+      font-family: 'JetBrains Mono';
+      font-size: 11px;
+      border-radius: 4px;
+      outline: none;
+    }
+
+    .trow {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 12px;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s;
+      cursor: pointer;
+    }
+
+    .trow:hover {
+      background: var(--s2);
+    }
+
+    .trow:last-child {
+      border-bottom: none;
+    }
+
+    .trow.playing {
+      border-left: 3px solid var(--acid);
+      background: rgba(195, 244, 0, 0.03);
+    }
+
+    .trow.nid {
+      border-left: 3px solid var(--acid);
+      background: rgba(195, 244, 0, 0.04);
+      animation: slidein 0.3s ease-out;
+    }
+
+    @keyframes slidein {
+      from {
+        opacity: 0;
+        transform: translateX(12px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .tthumb {
+      width: 40px;
+      height: 40px;
+      border-radius: 4px;
+      background: var(--s3);
+      flex-shrink: 0;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+      border: 1px solid var(--border);
+    }
+
+    .tthumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .tmeta {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .tname {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 2px;
+    }
+
+    .tartist {
+      font-family: 'JetBrains Mono';
+      font-size: 9px;
+      color: var(--dim);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .sbox {
+      background: var(--s1);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 12px;
+    }
+
+    .slbltxt {
+      font-family: 'JetBrains Mono';
+      font-size: 8px;
+      color: var(--dim);
+      letter-spacing: 0.12em;
+      margin-bottom: 3px;
+    }
+
+    .sval {
+      font-family: 'JetBrains Mono';
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--acid);
+      text-shadow: 0 0 10px rgba(195, 244, 0, 0.25);
+    }
+
+    .sval.cv {
+      color: var(--cyan);
+      text-shadow: 0 0 10px rgba(0, 224, 255, 0.2);
+    }
+
+    .sval.wh {
+      color: var(--text);
+      text-shadow: none;
+    }
+
+    #notif {
+      position: fixed;
+      top: 62px;
+      right: 16px;
+      z-index: 500;
+      background: var(--s2);
+      border: 1px solid var(--acid);
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-family: 'JetBrains Mono';
+      font-size: 10px;
+      color: var(--acid);
+      letter-spacing: 0.06em;
+      transform: translateX(120%);
+      transition: transform 0.3s ease;
+      max-width: 260px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    #notif.show {
+      transform: translateX(0);
+    }
+
+    #notif.err {
+      border-color: var(--red);
+      color: var(--red);
+    }
+
+    .empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 20px;
+      gap: 12px;
+      text-align: center;
+    }
+
+    .empty .ms {
+      font-size: 40px;
+      color: var(--s4);
+    }
+
+    .empty p {
+      font-family: 'JetBrains Mono';
+      font-size: 10px;
+      color: var(--dim);
+      letter-spacing: 0.06em;
+      line-height: 1.7;
+    }
+
+    .pbar {
+      background: var(--s4);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .pfill {
+      height: 100%;
+      background: var(--acid);
+      border-radius: 2px;
+      transition: width 0.3s;
+    }
+
+    .dhandle {
+      color: var(--border2);
+      cursor: grab;
+      transition: color 0.15s;
+      display: flex;
+      align-items: center;
+    }
+
+    .dhandle:hover {
+      color: var(--acid);
+    }
+
+    .dover {
+      border: 1px dashed var(--acid) !important;
+      background: rgba(195, 244, 0, 0.04) !important;
+    }
+
+    @keyframes scanline {
+      0% {
+        transform: translateY(-100%);
+      }
+
+      100% {
+        transform: translateY(200%);
+      }
+    }
+
+    .scanline {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(transparent, rgba(195, 244, 0, 0.4), transparent);
+      animation: scanline 3s linear infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.2;
+      }
+    }
+
+    .pulse {
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .sring {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 2px solid var(--red);
+      border-top-color: transparent;
+      animation: spin 0.8s linear infinite;
+      flex-shrink: 0;
+    }
+
+    @keyframes waveBar {
+
+      0%,
+      100% {
+        height: 15%;
+      }
+
+      50% {
+        height: 95%;
+      }
+    }
+
+    .wbar {
+      flex: 1;
+      border-radius: 1px;
+      background: var(--acid);
+      min-height: 2px;
+      height: 15%;
+      animation: waveBar 0.8s ease-in-out infinite;
+    }
+
+    .wbar:nth-child(odd) {
+      animation-delay: -0.4s;
+    }
+
+    .wbar:nth-child(3n) {
+      animation-delay: -0.2s;
+    }
+
+    .toggle {
+      width: 44px;
+      height: 24px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      position: relative;
+      transition: background 0.2s;
+      flex-shrink: 0;
+    }
+
+    .toggle.on {
+      background: var(--acid);
+    }
+
+    .toggle.off {
+      background: var(--s4);
+    }
+
+    .tknob {
+      width: 18px;
+      height: 18px;
+      background: #1a2000;
+      border-radius: 50%;
+      position: absolute;
+      top: 3px;
+      transition: left 0.2s;
+    }
+
+    .toggle.on .tknob {
+      left: 23px;
+    }
+
+    .toggle.off .tknob {
+      left: 3px;
+    }
+
+    /* IDENTIFIED CARD */
+    .idcard-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .idcard-content {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .idcard-tags {
+      display: flex;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+
+    /* LIVE PAGE */
+    .livepage {
+      padding: 16px;
+      padding-bottom: 24px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    @media(min-width:900px) {
+      .livepage {
+        grid-template-columns: 1fr 360px;
+      }
+    }
+
+    .timer-card {
+      background: var(--s0);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .timer-disp {
+      font-family: 'JetBrains Mono';
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      color: var(--acid);
+      text-shadow: 0 0 20px rgba(195, 244, 0, 0.4);
+      font-size: clamp(36px, 7vw, 58px);
+    }
+
+    .now-card {
+      border: 2px solid var(--acid);
+      border-radius: 8px;
+      padding: 18px;
+      position: relative;
+      overflow: hidden;
+      background: var(--s1);
+    }
+
+    .now-card::before {
+      content: '';
+      position: absolute;
+      top: -50px;
+      right: -50px;
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(195, 244, 0, 0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .nptitle {
+      font-family: 'Space Grotesk';
+      font-size: clamp(17px, 4vw, 26px);
+      font-weight: 700;
+      color: var(--acid);
+      text-shadow: 0 0 12px rgba(195, 244, 0, 0.35);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1.2;
+      margin-bottom: 3px;
+    }
+
+    .npartist {
+      font-size: 13px;
+      color: var(--dim2);
+      margin-bottom: 12px;
+    }
+
+    .nptags {
+      display: flex;
+      gap: 5px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .nptag {
+      font-family: 'JetBrains Mono';
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      padding: 2px 7px;
+      border-radius: 3px;
+    }
+
+    .tg-bpm {
+      background: rgba(195, 244, 0, 0.12);
+      color: var(--acid);
+      border: 1px solid rgba(195, 244, 0, 0.25);
+    }
+
+    .tg-key {
+      background: rgba(0, 224, 255, 0.1);
+      color: var(--cyan);
+      border: 1px solid rgba(0, 224, 255, 0.25);
+    }
+
+    .tg-g {
+      background: var(--s3);
+      color: var(--dim2);
+      border: 1px solid var(--border);
+    }
+
+    .nowbadge {
+      font-family: 'JetBrains Mono';
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      padding: 3px 8px;
+      border-radius: 3px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--acid);
+      color: #1a2000;
+    }
+
+    .wfwrap {
+      height: 40px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      padding: 4px 8px;
+      margin-top: 14px;
+      position: relative;
+    }
+
+    .wfwrap .ph {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: var(--red);
+      opacity: 0.8;
+    }
+
+    .ctrlrow {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .ctrlrow .btnp {
+      flex: 1;
+      justify-content: center;
+    }
+
+    .syssats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .sysbox {
+      background: var(--s0);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .qitem {
+      background: var(--s1);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.15s;
+    }
+
+    .qitem:hover {
+      border-color: var(--border2);
+      background: var(--s2);
+    }
+
+    /* LIBRARY */
+    .libpage {
+      padding: 16px;
+      padding-bottom: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .librow {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .liblist {
+      flex: 1;
+      min-width: 280px;
+      background: var(--s1);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .libside {
+      width: 260px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-family: 'JetBrains Mono';
+      font-size: 9px;
+      letter-spacing: 0.08em;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+
+    .chip.active {
+      background: var(--acid);
+      color: #1a2000;
+      border-color: var(--acid);
+    }
+
+    .chip:not(.active) {
+      background: var(--s2);
+      color: var(--dim2);
+    }
+
+    .chip:not(.active):hover {
+      border-color: var(--acid);
+      color: var(--acid);
+    }
+
+    /* HISTORY */
+    .histpage {
+      padding: 16px;
+      padding-bottom: 24px;
+    }
+
+    .histlay {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      margin-top: 14px;
+    }
+
+    .scard {
+      background: var(--s1);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .scard:hover {
+      border-color: var(--acid);
+      background: rgba(195, 244, 0, 0.02);
+    }
+
+    .sestable {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .sestable th {
+      font-family: 'JetBrains Mono';
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      color: var(--dim);
+      text-transform: uppercase;
+      padding: 10px 12px;
+      text-align: left;
+      background: var(--s0);
+    }
+
+    .sestable td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      font-size: 12px;
+    }
+
+    .sestable tbody tr:hover {
+      background: var(--s2);
+    }
+
+    /* MANAGER */
+    .mgrpage {
+      padding: 16px;
+      padding-bottom: 130px;
+    }
+
+    .mgrtabs {
+      display: flex;
+      gap: 4px;
+      background: var(--s1);
+      border: 1px solid var(--border);
+      padding: 4px;
+      border-radius: 6px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .mgrtab {
+      flex: 1;
+      min-width: 70px;
+      padding: 7px 10px;
+      font-family: 'JetBrains Mono';
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all 0.15s;
+    }
+
+    .mgrtab.active {
+      background: var(--acid);
+      color: #1a2000;
+    }
+
+    .mgrtab:not(.active) {
+      background: transparent;
+      color: var(--dim);
+    }
+
+    .mtrow {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s;
+    }
+
+    .mtrow:hover {
+      background: var(--s2);
+    }
+
+    .mgrfoot {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      z-index: 40;
+      flex-wrap: wrap;
+    }
+
+    /* IDENTIFY */
+    .idpage {
+      padding: 16px 16px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .setupcard {
+      width: 100%;
+      max-width: 440px;
+      background: var(--s1);
+      border: 1px solid var(--border2);
+      border-radius: 8px;
+      padding: 14px;
+    }
+
+    .stitle {
+      font-family: 'JetBrains Mono';
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--acid);
+      letter-spacing: 0.12em;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .flabel {
+      font-family: 'JetBrains Mono';
+      font-size: 9px;
+      color: var(--dim);
+      letter-spacing: 0.1em;
+      margin-bottom: 4px;
+      display: block;
+    }
+
+    .ksrow {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'JetBrains Mono';
+      font-size: 10px;
+      color: var(--acid);
+      letter-spacing: 0.06em;
+    }
+
+    .resetbtn {
+      margin-left: auto;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: 'JetBrains Mono';
+      font-size: 9px;
+      color: var(--dim);
+      transition: color 0.15s;
+    }
+
+    .resetbtn:hover {
+      color: var(--red);
+    }
+
+    .larea {
+      position: relative;
+      width: 190px;
+      height: 190px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .lring {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 1.5px solid var(--acid);
+      opacity: 0.15;
+      animation: ringP 2.5s ease-in-out infinite;
+    }
+
+    .lring:nth-child(2) {
+      inset: -18px;
+      animation-delay: 0.6s;
+    }
+
+    .lring:nth-child(3) {
+      inset: -36px;
+      animation-delay: 1.2s;
+    }
+
+    @keyframes ringP {
+
+      0%,
+      100% {
+        opacity: 0.15;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 0.04;
+        transform: scale(1.03);
+      }
+    }
+
+    .lbtn {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 38% 32%, #1c2800, #0a1000);
+      border: 2px solid var(--acid);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      position: relative;
+      z-index: 1;
+      box-shadow: 0 0 40px rgba(195, 244, 0, 0.12), inset 0 0 40px rgba(195, 244, 0, 0.04);
+      transition: all 0.25s;
+    }
+
+    .lbtn:hover {
+      box-shadow: 0 0 60px rgba(195, 244, 0, 0.22), inset 0 0 40px rgba(195, 244, 0, 0.08);
+    }
+
+    .lbtn:active {
+      transform: scale(0.97);
+    }
+
+    .lbtn.listening {
+      border-color: var(--red);
+      box-shadow: 0 0 40px rgba(255, 68, 85, 0.3), inset 0 0 40px rgba(255, 68, 85, 0.06);
+      animation: lGlow 1.8s ease-in-out infinite;
+    }
+
+    @keyframes lGlow {
+
+      0%,
+      100% {
+        box-shadow: 0 0 40px rgba(255, 68, 85, 0.3), inset 0 0 40px rgba(255, 68, 85, 0.06);
+      }
+
+      50% {
+        box-shadow: 0 0 80px rgba(255, 68, 85, 0.5), inset 0 0 60px rgba(255, 68, 85, 0.1);
+      }
+    }
+
+    .licon {
+      font-size: 40px;
+      color: var(--acid);
+      transition: color 0.2s;
+    }
+
+    .lbtn.listening .licon {
+      color: var(--red);
+    }
+
+    .llbl {
+      font-family: 'JetBrains Mono';
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      color: var(--acid);
+      transition: color 0.2s;
+    }
+
+    .lbtn.listening .llbl {
+      color: var(--red);
+    }
+
+    .statwrap {
+      width: 100%;
+      max-width: 340px;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .stxt {
+      font-family: 'JetBrains Mono';
+      font-size: 10px;
+      color: var(--dim);
+      letter-spacing: 0.06em;
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    .stxt.active {
+      color: var(--acid);
+    }
+
+    .stxt.error {
+      color: var(--red);
+    }
+
+    .stxt.warn {
+      color: var(--orange);
+    }
+
+    .nscan {
+      font-family: 'JetBrains Mono';
+      font-size: 9px;
+      color: var(--dim);
+      text-align: center;
+      letter-spacing: 0.06em;
+    }
+
+    .sbar {
+      height: 2px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .sbar.show {
+      opacity: 1;
+    }
+
+    .viz {
+      width: 100%;
+      max-width: 340px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      background: var(--s1);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 4px 8px;
+      overflow: hidden;
+    }
+
+    .vbar {
+      flex: 1;
+      border-radius: 1px;
+      background: var(--acid);
+      height: 6%;
+      transition: height 0.08s;
+      min-height: 2px;
+    }
+
+    .idcard {
+      width: 100%;
+      max-width: 440px;
+      background: var(--s1);
+      border: 2px solid var(--acid);
+      border-radius: 8px;
+      padding: 14px;
+      display: none;
+      position: relative;
+    }
+
+    .idcard.show {
+      display: block;
+      animation: cardIn 0.3s ease-out;
+    }
+
+    @keyframes cardIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .idcard::before {
+      content: '';
+      position: absolute;
+      top: -40px;
+      right: -40px;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(195, 244, 0, 0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .idart {
+      width: 68px;
+      height: 68px;
+      border-radius: 4px;
+      background: var(--s3);
+      flex-shrink: 0;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      border: 1px solid var(--border);
+    }
+
+    .idart img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .idtitle {
+      font-family: 'Space Grotesk';
+      font-size: clamp(14px, 3.5vw, 19px);
+      font-weight: 700;
+      color: var(--acid);
+      text-shadow: 0 0 12px rgba(195, 244, 0, 0.35);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1.2;
+      margin-bottom: 3px;
+    }
+
+    .idartist {
+      font-size: 12px;
+      color: var(--dim2);
+      margin-bottom: 8px;
+    }
+
+    .confrow {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+    }
+
+    .conft {
+      flex: 1;
+      height: 3px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .conff {
+      height: 100%;
+      background: var(--acid);
+      border-radius: 2px;
+      transition: width 0.5s;
+    }
+
+    .howcard {
+      width: 100%;
+      max-width: 440px;
+      background: var(--s1);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+    }
+
+    .step {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+
+    .step:last-child {
+      margin-bottom: 0;
+    }
+
+    .stepn {
+      font-family: 'JetBrains Mono';
+      font-size: 9px;
+      font-weight: 800;
+      color: #1a2000;
+      background: var(--acid);
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .stept {
+      font-family: 'JetBrains Mono';
+      font-size: 10px;
+      color: var(--dim);
+      line-height: 1.5;
+    }
+
+    .stept strong {
+      color: var(--dim2);
+    }
+
+    /* TRACKLIST */
+    .tlpage {
+      padding: 16px;
+      padding-bottom: 24px;
+    }
+
+    .exprow {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .btnexp {
+      padding: 9px;
+      font-family: 'JetBrains Mono';
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      transition: all 0.15s;
+      border: none;
+    }
+
+    .expp {
+      background: var(--acid);
+      color: #1a2000;
+    }
+
+    .expp:hover {
+      background: #d4ff1a;
+    }
+
+    .exps {
+      background: var(--s2);
+      color: var(--dim2);
+      border: 1px solid var(--border);
+    }
+
+    .exps:hover {
+      border-color: var(--dim2);
+      color: var(--text);
+    }
+
+    /* MODAL */
+    #modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #mbox {
+      background: var(--s2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 22px;
+      width: 90%;
+      max-width: 480px;
+      transform: scale(0.97);
+      transition: transform 0.2s;
+    }
+
+    @media(max-width:480px) {
+      .livepage {
+        padding: 12px;
+      }
+
+      .timer-disp {
+        font-size: 34px;
+      }
+
+      .larea {
+        width: 170px;
+        height: 170px;
+      }
+
+      .lbtn {
+        width: 130px;
+        height: 130px;
+      }
+
+      .licon {
+        font-size: 34px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+
+    <header class="header">
+      <div><span class="logo">NEON_SETLIST</span><span class="logo-sub" id="pagesub">LIVE SET</span></div>
+      <div class="hright">
+        <div class="pill pill-green" id="lpill" style="display:none;">
+          <div class="dot dot-green blink"></div>SCANNING
+        </div>
+        <div class="pill pill-red" id="rpill" style="display:none;">
+          <div class="dot dot-red blink"></div>REC
+        </div>
+        <button class="hbtn" onclick="openSettings()"><span class="ms" style="font-size:20px;">settings</span></button>
+        <button class="hbtn" onclick="openAddTrack()"><span class="ms"
+            style="font-size:20px;">add_circle</span></button>
+      </div>
+    </header>
+
+    <div class="tabs">
+      <button class="tab active" data-page="live" onclick="go('live')"><span class="ms">play_circle</span>LIVE</button>
+      <button class="tab" data-page="library" onclick="go('library')"><span
+          class="ms">library_music</span>LIBRARY</button>
+      <button class="tab" data-page="history" onclick="go('history')"><span class="ms">history</span>HISTORY</button>
+      <button class="tab" data-page="manager" onclick="go('manager')"><span
+          class="ms">queue_music</span>MANAGER</button>
+      <button class="tab" data-page="identify" onclick="go('identify')"><span
+          class="ms">graphic_eq</span>IDENTIFY</button>
+      <button class="tab" data-page="tracklist" onclick="go('tracklist')"><span
+          class="ms">format_list_numbered</span>TRACKLIST<span class="tbadge" id="tbbadge"
+          style="display:none;">0</span></button>
+    </div>
+
+    <div class="pages">
+
+      <!-- LIVE -->
+      <div class="page active" id="page-live">
+        <div class="livepage">
+          <div style="display:flex;flex-direction:column;gap:14px;">
+            <div class="timer-card">
+              <div>
+                <div class="slabel" style="margin-bottom:4px;">SESSION DURATION</div>
+                <div class="timer-disp" id="timerdisp">00:00:00</div>
+              </div>
+              <div style="text-align:right;">
+                <div class="slabel" style="margin-bottom:4px;">MASTER CLOCK</div>
+                <div id="masterbpm" class="mono acid glow" style="font-size:30px;font-weight:700;">126.00</div>
+                <div class="slabel acid" style="opacity:0.7;">BPM</div>
+              </div>
+            </div>
+            <div class="now-card glow-box" id="nowcard">
+              <div style="position:absolute;top:14px;right:14px;">
+                <div style="display:flex;align-items:center;gap:2px;height:22px;" id="npwf"></div>
+              </div>
+              <div style="margin-bottom:10px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+                <span class="nowbadge">NOW PLAYING</span>
+                <span class="nptag tg-g" id="npgenre">TECHNO</span>
+              </div>
+              <div style="display:flex;gap:14px;align-items:flex-start;">
+                <div class="idart" id="npart" style="width:72px;height:72px;">&#127925;</div>
+                <div style="flex:1;min-width:0;">
+                  <div class="nptitle" id="nptitle">SILICON_SOUL</div>
+                  <div class="npartist" id="npartist">CYBERNETIC_ECHO</div>
+                  <div class="nptags"><span class="nptag tg-bpm" id="npbpm">128 BPM</span><span class="nptag tg-key"
+                      id="npkey">4A</span></div>
+                </div>
+              </div>
+              <div class="wfwrap" id="wfbars">
+                <div class="ph"></div>
+              </div>
+            </div>
+            <div class="ctrlrow">
+              <button class="btn btnp btnlg" onclick="markPlayed()"><span class="ms"
+                  style="font-size:18px;">check_circle</span>MARK AS PLAYED</button>
+              <button class="btn btns btnlg" onclick="toggleAuto()" id="autobtn" style="padding:0 14px;"><span
+                  class="ms" style="font-size:18px;">loop</span><span id="autolbl">AUTO</span></button>
+              <button class="btn btns btnlg" onclick="emergLoop()"
+                style="padding:0 14px;border-color:rgba(255,68,85,0.3);color:rgba(255,68,85,0.7);"><span class="ms"
+                  style="font-size:18px;">warning</span></button>
+            </div>
+            <div class="syssats">
+              <div class="sysbox">
+                <div class="slabel" style="margin-bottom:3px;">BUFFER</div>
+                <div class="mono acid" style="font-size:13px;">1.2ms</div>
+                <div class="slabel" style="margin-top:1px;">OK</div>
+              </div>
+              <div class="sysbox">
+                <div class="slabel" style="margin-bottom:3px;">STREAM</div>
+                <div class="mono cyan" style="font-size:13px;">1080P</div>
+                <div class="slabel" style="margin-top:1px;">60FPS</div>
+              </div>
+              <div class="sysbox" style="position:relative;overflow:hidden;">
+                <div class="scanline"></div>
+                <div class="slabel" style="margin-bottom:3px;">SYNC</div>
+                <div class="mono acid" style="font-size:13px;" id="syncst">LOCKED</div>
+                <div class="slabel" style="margin-top:1px;">@126.00</div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+              <div class="slabel" style="display:flex;align-items:center;gap:6px;"><span class="ms"
+                  style="font-size:14px;color:var(--dim);">queue_music</span>UP NEXT</div>
+              <span class="slabel acid" id="qcount">0 tracks</span>
+            </div>
+            <div id="qlist" style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px;"></div>
+            <div onclick="go('library')"
+              style="border:2px dashed var(--border);border-radius:6px;padding:20px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;transition:all 0.2s;"
+              onmouseover="this.style.borderColor='var(--acid)';this.style.background='rgba(195,244,0,0.03)'"
+              onmouseout="this.style.borderColor='var(--border)';this.style.background='transparent'">
+              <span class="ms" style="font-size:28px;color:var(--s4);">add_box</span>
+              <span class="slabel">CLICK TO ADD FROM LIBRARY</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LIBRARY -->
+      <div class="page" id="page-library">
+        <div class="libpage">
+          <div class="card" style="padding:14px;">
+            <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
+              <div style="flex:1;min-width:180px;position:relative;">
+                <span class="ms"
+                  style="position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:18px;color:var(--dim);pointer-events:none;">search</span>
+                <input class="nsin" id="libsearch" type="text" placeholder="Search tracks, artists..."
+                  oninput="filterLib()" style="padding-left:36px;">
+              </div>
+              <select class="nssel" id="libgf" onchange="filterLib()">
+                <option value="">ALL GENRES</option>
+                <option>TECHNO</option>
+                <option>HOUSE</option>
+                <option>ELECTRO</option>
+                <option>AMBIENT</option>
+                <option>INDUSTRIAL</option>
+                <option>ACID</option>
+                <option>GLITCH</option>
+              </select>
+              <select class="nssel" id="libbf" onchange="filterLib()">
+                <option value="">ALL BPM</option>
+                <option value="120-125">120-125</option>
+                <option value="125-130">125-130</option>
+                <option value="130-140">130-140</option>
+                <option value="140+">140+</option>
+              </select>
+            </div>
+            <div style="display:flex;gap:5px;flex-wrap:wrap;" id="gchips"></div>
+          </div>
+          <div class="librow">
+            <div class="liblist">
+              <div
+                style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--s0);border-bottom:1px solid var(--border);">
+                <span class="slabel">LIBRARY</span><span class="slabel acid" id="libcount"></span>
+              </div>
+              <div id="liblist" style="max-height:560px;overflow-y:auto;"></div>
+            </div>
+            <div class="libside">
+              <div class="card" style="padding:14px;">
+                <div style="display:flex;justify-content:space-between;margin-bottom:12px;"><span
+                    class="slabel acid">QUEUE ANALYSIS</span><span class="ms"
+                    style="font-size:14px;color:var(--cyan);">analytics</span></div>
+                <div style="margin-bottom:10px;">
+                  <div
+                    style="display:flex;justify-content:space-between;font-family:'JetBrains Mono';font-size:9px;margin-bottom:4px;">
+                    <span class="dim">ENERGY</span><span class="acid">HIGH</span></div>
+                  <div class="pbar" style="height:4px;">
+                    <div class="pfill" style="width:78%;"></div>
+                  </div>
+                </div>
+                <div style="margin-bottom:10px;">
+                  <div
+                    style="display:flex;justify-content:space-between;font-family:'JetBrains Mono';font-size:9px;margin-bottom:4px;">
+                    <span class="dim">HARMONIC</span><span class="cyan">COMPATIBLE</span></div>
+                  <div class="pbar" style="height:4px;">
+                    <div style="height:100%;background:var(--cyan);border-radius:2px;width:92%;"></div>
+                  </div>
+                </div>
+                <div
+                  style="background:var(--bg);border:1px solid var(--acid);border-radius:4px;padding:10px;position:relative;overflow:hidden;">
+                  <div class="scanline"></div>
+                  <div class="slabel" style="margin-bottom:3px;">AUTO-SYNC</div>
+                  <div class="mono acid glow" style="font-size:18px;font-weight:700;">ACTIVE</div>
+                  <div class="slabel" style="margin-top:2px;">@ <span id="libsync" class="acid">126.00</span></div>
+                </div>
+              </div>
+              <div class="card" style="padding:14px;">
+                <div class="slabel" style="margin-bottom:8px;">ENERGY PROFILE</div>
+                <div style="display:flex;align-items:flex-end;gap:3px;height:52px;">
+                  <div style="flex:1;background:var(--acid);opacity:0.3;border-radius:2px;height:40%;"></div>
+                  <div style="flex:1;background:var(--acid);opacity:0.5;border-radius:2px;height:60%;"></div>
+                  <div style="flex:1;background:var(--acid);opacity:0.8;border-radius:2px;height:85%;"></div>
+                  <div style="flex:1;background:var(--acid);border-radius:2px;height:100%;" class="glow-box"></div>
+                  <div style="flex:1;background:var(--acid);opacity:0.7;border-radius:2px;height:70%;"></div>
+                  <div style="flex:1;background:var(--acid);opacity:0.4;border-radius:2px;height:40%;"></div>
+                  <div style="flex:1;background:var(--acid);opacity:0.2;border-radius:2px;height:20%;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- HISTORY -->
+      <div class="page" id="page-history">
+        <div class="histpage">
+          <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:10px;">
+            <div>
+              <div class="slabel" style="margin-bottom:4px;">PERFORMANCE ARCHIVE</div>
+              <h1
+                style="font-family:'Space Grotesk';font-size:clamp(20px,5vw,34px);font-weight:700;color:var(--text);line-height:1.1;">
+                Last Night at <span class="acid">Club Horizon</span></h1>
+            </div>
+            <div style="display:flex;gap:8px;"><button class="btn btns" onclick="exportCSV()"
+                style="font-size:10px;"><span class="ms" style="font-size:14px;">download</span>CSV</button><button
+                class="btn btnp" onclick="exportTXT()" style="font-size:10px;"><span class="ms"
+                  style="font-size:14px;">description</span>TXT</button></div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin:14px 0;">
+            <div class="sbox">
+              <div class="slbltxt">DURATION</div>
+              <div class="sval">3:45:12</div>
+            </div>
+            <div class="sbox">
+              <div class="slbltxt">TRACKS</div>
+              <div class="sval">54</div>
+            </div>
+            <div class="sbox">
+              <div class="slbltxt">AVG BPM</div>
+              <div class="sval">126</div>
+            </div>
+            <div class="sbox">
+              <div class="slbltxt">ENERGY</div>
+              <div class="sval cv">HIGH</div>
+            </div>
+          </div>
+          <div class="histlay">
+            <div
+              style="flex:1;min-width:280px;background:var(--s1);border:1px solid var(--border);border-radius:8px;overflow:hidden;">
+              <div
+                style="padding:10px 14px;background:var(--s0);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;">
+                <span class="slabel acid">SETLIST HISTORY</span><span class="slabel">Oct 24, 2023</span></div>
+              <div id="histlist" style="max-height:440px;overflow-y:auto;"></div>
+              <div style="padding:10px;text-align:center;border-top:1px solid var(--border);"><button
+                  onclick="loadMoreHist()" class="slabel"
+                  style="background:none;border:none;cursor:pointer;transition:color 0.15s;"
+                  onmouseover="this.style.color='var(--acid)'" onmouseout="this.style.color='var(--dim)'">LOAD MORE
+                  TRACKS</button></div>
+            </div>
+            <div style="width:230px;flex-shrink:0;display:flex;flex-direction:column;gap:10px;">
+              <div class="card" style="padding:14px;">
+                <div class="slabel" style="margin-bottom:10px;">GENRE DISTRIBUTION</div>
+                <div id="gbars" style="display:flex;flex-direction:column;gap:8px;"></div>
+              </div>
+              <div>
+                <div class="slabel" style="margin-bottom:6px;">PAST SESSIONS</div>
+                <div id="psess" style="display:flex;flex-direction:column;gap:6px;"></div>
+              </div>
+            </div>
+          </div>
+          <div
+            style="background:var(--s1);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-top:14px;">
+            <div
+              style="padding:10px 14px;background:var(--s0);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+              <span class="slabel acid">SESSION ARCHIVE</span>
+              <div style="position:relative;"><span class="ms"
+                  style="position:absolute;left:8px;top:50%;transform:translateY(-50%);font-size:14px;color:var(--dim);pointer-events:none;">search</span><input
+                  class="nsin" id="sesssearch" type="text" placeholder="Filter sessions..." oninput="filterSess()"
+                  style="padding-left:28px;padding-top:6px;padding-bottom:6px;font-size:10px;width:180px;"></div>
+            </div>
+            <div style="overflow-x:auto;">
+              <table class="sestable">
+                <thead>
+                  <tr>
+                    <th>DATE</th>
+                    <th>ID</th>
+                    <th>VENUE</th>
+                    <th>DURATION</th>
+                    <th>BPM</th>
+                    <th>KEY</th>
+                    <th style="text-align:right;">ACTIONS</th>
+                  </tr>
+                </thead>
+                <tbody id="sessbody"></tbody>
+              </table>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-top:14px;">
+            <div style="background:var(--s0);border-left:3px solid var(--acid);padding:14px;">
+              <div class="slabel" style="margin-bottom:4px;">TOTAL TIME</div>
+              <div class="mono" style="font-size:18px;font-weight:700;color:var(--text);">842h 12m</div>
+            </div>
+            <div style="background:var(--s0);border-left:3px solid var(--cyan);padding:14px;">
+              <div class="slabel" style="margin-bottom:4px;">UNIQUE TRACKS</div>
+              <div class="mono" style="font-size:18px;font-weight:700;color:var(--text);">3,120</div>
+            </div>
+            <div style="background:var(--s0);border-left:3px solid var(--acid);padding:14px;">
+              <div class="slabel" style="margin-bottom:4px;">ENGAGEMENT</div>
+              <div class="mono" style="font-size:18px;font-weight:700;color:var(--text);">94%</div>
+            </div>
+            <div
+              style="background:var(--s0);border-left:3px solid var(--cyan);padding:14px;position:relative;overflow:hidden;">
+              <div class="scanline"></div>
+              <div class="slabel" style="margin-bottom:4px;">SYNC STATUS</div>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <div class="dot dot-green pulse"></div>
+                <div class="mono acid glow" style="font-size:18px;font-weight:700;">LIVE</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MANAGER -->
+      <div class="page" id="page-manager">
+        <div class="mgrpage">
+          <div
+            style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px;">
+            <div style="display:flex;align-items:center;gap:8px;"><span class="mono acid"
+                style="font-size:14px;font-weight:700;">MANAGER</span><span class="slabel"
+                style="background:var(--s2);border:1px solid var(--border);border-radius:20px;padding:2px 8px;">MAIN_ROOM_V2</span>
+            </div>
+            <button class="btn btnp" onclick="publishSL()" style="font-size:10px;"><span class="ms"
+                style="font-size:14px;">publish</span>PUBLISH SETLIST</button>
+          </div>
+          <div class="mgrtabs">
+            <button class="mgrtab active" data-mt="planned" onclick="setMT('planned')">PLANNED</button>
+            <button class="mgrtab" data-mt="requests" onclick="setMT('requests')">REQUESTS</button>
+            <button class="mgrtab" data-mt="emergency" onclick="setMT('emergency')">EMERGENCY</button>
+            <button class="mgrtab" data-mt="fillers" onclick="setMT('fillers')">FILLERS</button>
+          </div>
+          <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
+            <div style="flex:1;min-width:180px;position:relative;"><span class="ms"
+                style="position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:18px;color:var(--dim);pointer-events:none;">search</span><input
+                class="nsin" id="mgrsearch" type="text" placeholder="Search tracks..." oninput="filterMgr()"
+                style="padding-left:36px;"></div>
+            <button class="btn btns" onclick="autoMixOrd()" style="font-size:10px;"><span class="ms"
+                style="font-size:14px;">shuffle</span>AUTO-MIX</button>
+            <button class="btn btnp" onclick="openAddTrack()" style="font-size:10px;"><span class="ms"
+                style="font-size:14px;">add</span>ADD TRACK</button>
+          </div>
+          <div
+            style="display:grid;grid-template-columns:32px 44px 1fr 68px 58px 88px 32px;gap:6px;padding:6px 10px;border-bottom:1px solid var(--border);">
+            <div></div>
+            <div></div>
+            <div class="slabel">TRACK / ARTIST</div>
+            <div class="slabel" style="text-align:center;">BPM</div>
+            <div class="slabel" style="text-align:center;">KEY</div>
+            <div class="slabel" style="text-align:center;">GENRE</div>
+            <div></div>
+          </div>
+          <div id="mgrlist" style="margin-bottom:8px;"></div>
+          <div class="mgrfoot">
+            <div style="display:flex;gap:14px;flex-wrap:wrap;flex:1;">
+              <div style="border-right:1px solid var(--border);padding-right:14px;">
+                <div class="slabel" style="margin-bottom:2px;">TOTAL</div>
+                <div class="mono acid glow" style="font-size:17px;font-weight:700;" id="mgrtime">00:00:00</div>
+              </div>
+              <div style="border-right:1px solid var(--border);padding-right:14px;">
+                <div class="slabel" style="margin-bottom:2px;">TRACKS</div>
+                <div class="mono" style="font-size:17px;font-weight:700;color:var(--text);" id="mgrcount">0</div>
+              </div>
+              <div style="border-right:1px solid var(--border);padding-right:14px;">
+                <div class="slabel" style="margin-bottom:2px;">AVG BPM</div>
+                <div class="mono cyan" style="font-size:17px;font-weight:700;" id="mgrbpm">-</div>
+              </div>
+              <div>
+                <div class="slabel" style="margin-bottom:4px;">ENERGY</div>
+                <div id="mgrenergy" style="display:flex;gap:3px;align-items:center;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- IDENTIFY -->
+      <div class="page" id="page-identify">
+        <div class="idpage">
+          <div class="setupcard" id="setupcard">
+            <div class="stitle"><span class="ms" style="font-size:14px;">key</span>ACRCloud API Setup</div>
+            <div id="keyform">
+              <label class="flabel">HOST</label><input class="nsin" id="acrhost" type="text"
+                placeholder="identify-eu-west-1.acrcloud.com" style="margin-bottom:8px;">
+              <label class="flabel">ACCESS KEY</label><input class="nsin" id="acrkey" type="text"
+                placeholder="Your Access Key" style="margin-bottom:8px;">
+              <label class="flabel">ACCESS SECRET</label><input class="nsin" id="acrsecret" type="password"
+                placeholder="Your Access Secret" style="margin-bottom:10px;">
+              <button class="btn btnp btnfull" onclick="saveKeys()"><span class="ms"
+                  style="font-size:14px;">save</span>SAVE &amp; ACTIVATE</button>
+              <div style="font-family:'JetBrains Mono';font-size:9px;color:var(--dim);line-height:1.6;margin-top:8px;">
+                Free at <a href="https://www.acrcloud.com" target="_blank" style="color:var(--cyan);">acrcloud.com</a> -
+                Create Project - Audio &amp; Video Recognition - copy Host, Key, Secret. Free = 2,000 scans/month.</div>
+            </div>
+            <div id="ksrow" class="ksrow" style="display:none;"><span class="ms mf"
+                style="font-size:16px;color:var(--acid);">check_circle</span>API keys active - ready to identify<button
+                class="resetbtn" onclick="resetKeys()">RESET</button></div>
+          </div>
+          <div class="larea">
+            <div class="lring"></div>
+            <div class="lring"></div>
+            <div class="lring"></div>
+            <button class="lbtn" id="lbtn" onclick="toggleListen()">
+              <span class="ms licon" id="licon">mic</span>
+              <span class="llbl" id="llbl">TAP TO ID</span>
+            </button>
+          </div>
+          <div class="viz" id="viz"></div>
+          <div class="statwrap">
+            <div class="sbar" id="sbar">
+              <div class="pfill" id="sfill" style="width:0%;"></div>
+            </div>
+            <div class="stxt" id="stxt">Tap button - hold device near any music source</div>
+            <div class="nscan" id="nscantxt"></div>
+          </div>
+          <div class="idcard" id="idcard">
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;flex-wrap:wrap;">
+              <div class="sring" id="idring" style="display:none;"></div>
+              <span class="nowbadge">IDENTIFIED</span>
+              <span class="nptag tg-g" id="idgtag">TECHNO</span>
+              <span class="nptag" id="idnewtag"
+                style="display:none;background:rgba(255,68,85,0.1);color:var(--red);border:1px solid rgba(255,68,85,0.2);">NEW
+                TRACK</span>
+            </div>
+            <div style="display:flex;gap:12px;align-items:flex-start;">
+              <div class="idart" id="idart">&#127925;</div>
+              <div style="flex:1;min-width:0;">
+                <div class="idtitle" id="idtitle">-</div>
+                <div class="idartist" id="idartist">-</div>
+                <div style="display:flex;gap:5px;flex-wrap:wrap;">
+                  <span class="nptag tg-bpm" id="idbpm" style="display:none;"></span>
+                  <span class="nptag tg-key" id="idkey" style="display:none;"></span>
+                  <span class="nptag tg-g" id="idlabel" style="display:none;"></span>
+                </div>
+              </div>
+            </div>
+            <div class="confrow">
+              <span class="slabel" style="white-space:nowrap;">MATCH CONFIDENCE</span>
+              <div class="conft">
+                <div class="conff" id="conff" style="width:0%;"></div>
+              </div>
+              <span class="mono acid" style="font-size:10px;font-weight:700;min-width:28px;text-align:right;"
+                id="confpct">-</span>
+            </div>
+          </div>
+          <div class="howcard">
+            <div class="slabel" style="margin-bottom:10px;">HOW TO USE</div>
+            <div class="step">
+              <div class="stepn">1</div>
+              <div class="stept">Get free API keys from <strong>acrcloud.com</strong> - 2 minutes</div>
+            </div>
+            <div class="step">
+              <div class="stepn">2</div>
+              <div class="stept">Play music from <strong>anywhere</strong> - Spotify, YouTube, SoundCloud, TikTok,
+                Instagram, another device, a speaker</div>
+            </div>
+            <div class="step">
+              <div class="stepn">3</div>
+              <div class="stept">Tap the button, <strong>allow microphone</strong>, hold device near the speaker</div>
+            </div>
+            <div class="step">
+              <div class="stepn">4</div>
+              <div class="stept">Every <strong>15 seconds</strong> it fingerprints the audio and builds the tracklist
+                automatically</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TRACKLIST -->
+      <div class="page" id="page-tracklist">
+        <div class="tlpage">
+          <div
+            style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
+            <div style="display:flex;align-items:center;gap:8px;"><span class="ms"
+                style="font-size:15px;color:var(--dim);">format_list_numbered</span><span class="slabel">IDENTIFIED
+                TRACKLIST</span></div>
+            <button class="btn btns btnd" onclick="clearTL()" style="font-size:10px;"><span class="ms"
+                style="font-size:13px;">delete</span>CLEAR</button>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;">
+            <div class="sbox">
+              <div class="slbltxt">TRACKS</div>
+              <div class="sval" id="stcount">0</div>
+            </div>
+            <div class="sbox">
+              <div class="slbltxt">AVG BPM</div>
+              <div class="sval" id="stbpm">-</div>
+            </div>
+            <div class="sbox">
+              <div class="slbltxt">SCANS</div>
+              <div class="sval cv" id="stscans">0</div>
+            </div>
+          </div>
+          <div style="background:var(--s1);border:1px solid var(--border);border-radius:8px;overflow:hidden;"
+            id="tlwrap">
+            <div class="empty" id="tlempty"><span class="ms">track_changes</span>
+              <p>No tracks identified yet<br>Go to IDENTIFY tab and start listening</p>
+            </div>
+          </div>
+          <div class="exprow">
+            <button class="btnexp expp" onclick="doExport('txt')"><span class="ms"
+                style="font-size:13px;">description</span>TXT</button>
+            <button class="btnexp exps" onclick="doExport('csv')"><span class="ms"
+                style="font-size:13px;">download</span>CSV</button>
+            <button class="btnexp exps" onclick="copyTL()"><span class="ms"
+                style="font-size:13px;">content_copy</span>COPY</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /pages -->
+  </div><!-- /app -->
+
+  <div id="notif"></div>
+  <div id="modal" onclick="closeModal()">
+    <div id="mbox" onclick="event.stopPropagation()">
+      <div id="mcontent"></div>
+    </div>
+  </div>
+
+  <script>
+    // STATE
+    let ST = { timer: 0, auto: false, bpm: 126, mgrTab: 'planned', djName: 'DJ_NEON' };
+    let ACR = { host: '', key: '', secret: '' };
+    let CFG = { scanInt: 15, dedup: true };
+    let library = [], queue = [], setlist = [], tracklist = [], nowPlaying = null;
+    let lastKey = null, totalScans = 0, isListening = false;
+    let mstream = null, actx = null, analyser = null, scanIv = null, vizRaf = null, timerIv = null;
+    let nextId = 100, activeChip = '', dragSrc = -1, dragList = '';
+    let curTrackModal = null;
+
+    const DEFLIB = [
+      { id: 1, title: 'CYBER_DRIVE', artist: 'NEON_ARCHITECT', bpm: 126, key: '8A', genre: 'TECHNO', duration: '07:12' },
+      { id: 2, title: 'NEURAL_NETWORK', artist: 'BINARY_SUNSET', bpm: 126, key: '8B', genre: 'TECHNO', duration: '06:44' },
+      { id: 3, title: 'FREQUENCY_RESPONSE', artist: 'DATA_FLOW', bpm: 127, key: '1A', genre: 'ELECTRO', duration: '05:30' },
+      { id: 4, title: 'INFINITE_LOOP', artist: 'VOID_WALKER', bpm: 128, key: '4A', genre: 'TECHNO', duration: '07:48' },
+      { id: 5, title: 'SILICON_SOUL', artist: 'CYBERNETIC_ECHO', bpm: 128, key: '4A', genre: 'TECHNO', duration: '06:12' },
+      { id: 6, title: 'HYPER_RELATIVITY', artist: 'A-NEON_COLLECTIVE', bpm: 126, key: '1A', genre: 'TECHNO', duration: '08:02' },
+      { id: 7, title: 'KINETIC_FLOW', artist: 'MARCUS_VOLT', bpm: 128, key: '1A', genre: 'HOUSE', duration: '07:15' },
+      { id: 8, title: 'STATIC_DRIFT', artist: 'VECTOR_B', bpm: 125, key: '4B', genre: 'MINIMAL', duration: '05:55' },
+      { id: 9, title: 'SYNTHETIC_HORIZON', artist: 'VOID_RUNNER', bpm: 124, key: '11B', genre: 'ELECTRO', duration: '06:22' },
+      { id: 10, title: 'PULSE_MODULATION', artist: 'KINETIC_FLOW', bpm: 128, key: '4A', genre: 'TECHNO', duration: '07:03' },
+      { id: 11, title: 'DEEP_RESONANCE', artist: 'SUB_STATION', bpm: 122, key: '2B', genre: 'AMBIENT', duration: '09:10' },
+      { id: 12, title: 'GLITCH_AESTHETIC', artist: 'FREQ_WAVE', bpm: 130, key: '5A', genre: 'GLITCH', duration: '06:38' },
+      { id: 13, title: 'ACID_RAVE_CONSTRUCT', artist: 'ROLAND_TB_MOD', bpm: 135, key: '2A', genre: 'ACID', duration: '08:10' },
+      { id: 14, title: 'NEURAL_DENSITY', artist: 'V0ID_WALKER', bpm: 128, key: '8A', genre: 'TECHNO', duration: '07:44' },
+      { id: 15, title: 'OXYGEN_REDACTION', artist: 'AURAL_SCAN', bpm: 124, key: '3A', genre: 'MINIMAL', duration: '06:00' },
+      { id: 16, title: 'VOID_SEQUENCE', artist: 'NULL_POINTER', bpm: 130, key: '2B', genre: 'INDUSTRIAL', duration: '07:22' },
+      { id: 17, title: 'GLITCH_MANIFESTO', artist: 'ERROR_CODE_X', bpm: 130, key: '11B', genre: 'GLITCH', duration: '05:48' },
+      { id: 18, title: 'PRESSURE_DROP', artist: 'SUB_LEVEL', bpm: 126, key: '8A', genre: 'TECHNO', duration: '06:55' },
+      { id: 19, title: 'SILICON_VALLEY_STORM', artist: 'BIT_CRUSHER', bpm: 128, key: '11B', genre: 'INDUSTRIAL', duration: '07:30' },
+      { id: 20, title: 'ANALOG_DREAMS_V2', artist: 'OSCILLATOR_ONE', bpm: 127.5, key: '4A', genre: 'ELECTRO', duration: '06:48' },
+    ];
+    const HISTTRACKS = [
+      { title: 'Obsidian Pulse', artist: 'KINETIC ARCHITECT', bpm: 126.0, key: 'Am' },
+      { title: 'Neural Interface', artist: 'SYNTHETIC MIND', bpm: 128.0, key: 'Fm' },
+      { title: 'Voltage Drop', artist: 'CURRENT RESISTOR', bpm: 124.5, key: 'Cm' },
+      { title: 'Data Storm', artist: 'BINARY PRISM', bpm: 127.5, key: '8A' },
+      { title: 'Signal Ghost', artist: 'VOID_RUNNER', bpm: 130.0, key: '5A' },
+      { title: 'Error Cascade', artist: 'FREQ_WAVE', bpm: 132.0, key: '11B' },
+    ];
+    let histTracks = [...HISTTRACKS];
+    const SESSIONS = [
+      { date: '2023.10.24', id: '#SET_9921', venue: 'Cyberia Underground, Berlin', duration: '04:15:22', bpm: 132.4, key: 'Am/8A' },
+      { date: '2023.10.21', id: '#SET_9855', venue: 'Neon Loft Studio Set', duration: '02:00:00', bpm: 128.0, key: 'Ebm/2A' },
+      { date: '2023.10.18', id: '#SET_9710', venue: 'Acid Garden Festival', duration: '01:30:15', bpm: 142.1, key: 'F#m/11A' },
+      { date: '2023.10.12', id: '#SET_9602', venue: 'The Warehouse Project', duration: '06:45:00', bpm: 130.5, key: 'Cm/5A' },
+    ];
+    const PASTLINKS = [{ name: 'Warehouse 9', date: 'Oct 17 - 4:10:00' }, { name: 'Basement Sessions', date: 'Oct 12 - 2:45:00' }, { name: 'Skyline Rooftop', date: 'Oct 05 - 5:20:00' }];
+
+    function init() {
+      loadData(); buildViz(); renderAll(); go('live'); startTimer();
+      document.addEventListener('keydown', e => {
+        if (e.target.tagName === 'INPUT') return;
+        const m = { '1': 'live', '2': 'library', '3': 'history', '4': 'manager', '5': 'identify', '6': 'tracklist' };
+        if (m[e.key]) go(m[e.key]);
+        if (e.key === 'n' || e.key === 'N') markPlayed();
+        if (e.key === ' ' && document.getElementById('page-identify').classList.contains('active')) { e.preventDefault(); toggleListen(); }
+        if (e.key === 'Escape') closeModal();
+      });
+    }
+
+    function loadData() {
+      try {
+        const s = localStorage.getItem('ns_st'); if (s) Object.assign(ST, JSON.parse(s));
+        const a = localStorage.getItem('ns_acr'); if (a) { ACR = JSON.parse(a); if (ACR.host && ACR.key && ACR.secret) showKeySaved(); }
+        const c = localStorage.getItem('ns_cfg'); if (c) CFG = { ...CFG, ...JSON.parse(c) };
+        library = JSON.parse(localStorage.getItem('ns_lib') || 'null') || DEFLIB;
+        queue = JSON.parse(localStorage.getItem('ns_q') || 'null') || DEFLIB.slice(0, 4).map(t => ({ ...t }));
+        setlist = JSON.parse(localStorage.getItem('ns_sl') || 'null') || DEFLIB.slice(0, 8).map(t => ({ ...t }));
+        tracklist = JSON.parse(localStorage.getItem('ns_tl') || '[]');
+        nowPlaying = library[4] || library[0];
+      } catch (e) { library = DEFLIB; queue = DEFLIB.slice(0, 4).map(t => ({ ...t })); setlist = DEFLIB.slice(0, 8).map(t => ({ ...t })); nowPlaying = DEFLIB[4]; }
+    }
+
+    function save() {
+      try {
+        localStorage.setItem('ns_st', JSON.stringify(ST));
+        localStorage.setItem('ns_lib', JSON.stringify(library));
+        localStorage.setItem('ns_q', JSON.stringify(queue));
+        localStorage.setItem('ns_sl', JSON.stringify(setlist));
+        localStorage.setItem('ns_tl', JSON.stringify(tracklist));
+      } catch (e) { }
+    }
+
+    function renderAll() {
+      renderNP(); renderQ(); renderLib(); buildChips(); renderHistList(); renderGBars(); renderPSess(); renderSessTable(); renderMgr(); renderTL(); updateStats(); updateBadge();
+      document.getElementById('libsync').textContent = ST.bpm.toFixed(2);
+      document.getElementById('masterbpm').textContent = ST.bpm.toFixed(2);
+    }
+
+    // NAV
+    const pagesubs = { live: 'LIVE SET', library: 'LIBRARY', history: 'HISTORY', manager: 'MANAGER', identify: 'TRACK ID', tracklist: 'TRACKLIST' };
+    function go(page) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById('page-' + page).classList.add('active');
+      document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.page === page));
+      document.getElementById('pagesub').textContent = pagesubs[page] || '';
+      closeModal();
+    }
+
+    // TIMER
+    function startTimer() {
+      if (timerIv) return;
+      timerIv = setInterval(() => {
+        ST.timer++;
+        const h = Math.floor(ST.timer / 3600), m = Math.floor((ST.timer % 3600) / 60), s = ST.timer % 60;
+        document.getElementById('timerdisp').textContent = [h, m, s].map(v => String(v).padStart(2, '0')).join(':');
+        document.getElementById('rpill').style.display = 'flex';
+      }, 1000);
+    }
+
+    // NOW PLAYING
+    function renderNP() {
+      if (!nowPlaying) return;
+      document.getElementById('nptitle').textContent = nowPlaying.title;
+      document.getElementById('npartist').textContent = nowPlaying.artist;
+      document.getElementById('npbpm').textContent = (nowPlaying.bpm?.toFixed ? nowPlaying.bpm.toFixed(0) : nowPlaying.bpm) + ' BPM';
+      document.getElementById('npkey').textContent = nowPlaying.key || '-';
+      if (nowPlaying.genre) document.getElementById('npgenre').textContent = nowPlaying.genre;
+      document.getElementById('masterbpm').textContent = ST.bpm.toFixed(2);
+      buildWF(); buildNPWF();
+    }
+
+    function buildWF() {
+      const w = document.getElementById('wfbars'); w.innerHTML = '<div class="ph"></div>';
+      for (let i = 0; i < 60; i++) { const b = document.createElement('div'); b.className = 'wbar'; b.style.height = (Math.random() * 80 + 15) + '%'; b.style.animationDelay = (Math.random() * -0.8) + 's'; b.style.opacity = i < 30 ? '0.5' : '1'; w.appendChild(b); }
+    }
+    function buildNPWF() {
+      const w = document.getElementById('npwf'); if (!w) return; w.innerHTML = '';
+      for (let i = 0; i < 10; i++) { const b = document.createElement('div'); b.className = 'wbar'; b.style.height = (Math.random() * 80 + 15) + '%'; b.style.animationDelay = (Math.random() * -0.8) + 's'; b.style.width = '3px'; b.style.flex = 'none'; w.appendChild(b); }
+    }
+
+    function markPlayed() {
+      if (!queue.length) { notify('QUEUE IS EMPTY'); return; }
+      nowPlaying = queue.shift(); ST.bpm = parseFloat(nowPlaying.bpm) || ST.bpm;
+      save(); renderNP(); renderQ(); renderLib(); notify('NOW PLAYING: ' + nowPlaying.title.substring(0, 22));
+      const c = document.querySelector('.now-card'); if (c) { c.style.borderColor = '#fff'; setTimeout(() => c.style.borderColor = 'var(--acid)', 300); }
+    }
+    function toggleAuto() {
+      ST.auto = !ST.auto;
+      const b = document.getElementById('autobtn'); document.getElementById('autolbl').textContent = ST.auto ? 'ON' : 'AUTO';
+      b.style.borderColor = ST.auto ? 'var(--acid)' : ''; b.style.color = ST.auto ? 'var(--acid)' : '';
+      notify('AUTO-MIX: ' + (ST.auto ? 'ENABLED' : 'DISABLED'));
+    }
+    function emergLoop() { document.getElementById('syncst').textContent = 'LOOPING'; notify('EMERGENCY LOOP ACTIVATED'); setTimeout(() => document.getElementById('syncst').textContent = 'LOCKED', 3000); }
+
+    // QUEUE
+    function renderQ() {
+      const list = document.getElementById('qlist');
+      document.getElementById('qcount').textContent = queue.length + ' tracks';
+      list.innerHTML = '';
+      queue.forEach((t, i) => {
+        const el = document.createElement('div'); el.className = 'qitem'; el.draggable = true;
+        el.innerHTML = `<div class="dhandle"><span class="ms" style="font-size:18px;">drag_indicator</span></div><div class="tthumb">&#127925;</div><div style="flex:1;min-width:0;"><div class="tname">${esc(t.title)}</div><div class="tartist">${esc(t.artist)}</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px;"><span class="mono acid" style="font-size:11px;font-weight:700;">${t.bpm}</span><span class="mono cyan" style="font-size:10px;">${t.key}</span></div><button onclick="rmQ(${i})" style="background:none;border:none;cursor:pointer;color:var(--border);display:flex;align-items:center;transition:color 0.15s;" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--border)'"><span class="ms" style="font-size:16px;">remove_circle</span></button>`;
+        el.addEventListener('dragstart', e => { dragSrc = i; dragList = 'queue'; e.dataTransfer.effectAllowed = 'move'; });
+        el.addEventListener('dragover', e => { e.preventDefault(); el.classList.add('dover'); });
+        el.addEventListener('dragleave', () => el.classList.remove('dover'));
+        el.addEventListener('drop', e => { e.preventDefault(); el.classList.remove('dover'); if (dragList === 'queue' && dragSrc !== i) { const m = queue.splice(dragSrc, 1)[0]; queue.splice(i, 0, m); save(); renderQ(); notify('QUEUE REORDERED'); } });
+        list.appendChild(el);
+      });
+    }
+    function rmQ(i) { queue.splice(i, 1); save(); renderQ(); renderLib(); notify('REMOVED FROM QUEUE'); }
+    function addToQ(t) { if (queue.find(q => q.id === t.id)) { notify('ALREADY IN QUEUE'); return; } queue.push({ ...t }); save(); renderQ(); renderLib(); notify('ADDED: ' + t.title.substring(0, 20)); }
+
+    // LIBRARY
+    function getFL() {
+      const s = (document.getElementById('libsearch')?.value || '').toLowerCase();
+      const g = document.getElementById('libgf')?.value || '';
+      const b = document.getElementById('libbf')?.value || '';
+      return library.filter(t => {
+        const ms = !s || t.title.toLowerCase().includes(s) || t.artist.toLowerCase().includes(s);
+        const mg = !g || t.genre === g; const mc = !activeChip || t.genre === activeChip;
+        let mb = true;
+        if (b === '120-125') mb = t.bpm >= 120 && t.bpm < 125; else if (b === '125-130') mb = t.bpm >= 125 && t.bpm < 130; else if (b === '130-140') mb = t.bpm >= 130 && t.bpm < 140; else if (b === '140+') mb = t.bpm >= 140;
+        return ms && mg && mc && mb;
+      });
+    }
+    function renderLib() {
+      const list = document.getElementById('liblist'); const tracks = getFL();
+      document.getElementById('libcount').textContent = tracks.length + ' TRACKS';
+      list.innerHTML = '';
+      tracks.forEach(t => {
+        const inQ = queue.some(q => q.id === t.id);
+        const row = document.createElement('div'); row.className = 'trow' + (inQ ? ' playing' : '');
+        row.innerHTML = `<div class="tthumb">&#127925;</div><div class="tmeta"><div class="tname" style="color:${inQ ? 'var(--acid)' : 'var(--text)'};">${esc(t.title)}${inQ ? '<span style="font-family:JetBrains Mono;font-size:8px;background:var(--acid);color:#1a2000;padding:1px 5px;border-radius:2px;margin-left:6px;font-weight:700;">QUEUED</span>' : ''}</div><div class="tartist">${esc(t.artist)}</div></div><div style="display:flex;align-items:center;gap:8px;flex-shrink:0;"><div style="text-align:right;"><div class="mono acid" style="font-size:11px;font-weight:700;">${t.bpm}</div><div class="mono cyan" style="font-size:10px;">${t.key}</div></div><button onclick="showTM(${t.id})" style="background:${inQ ? 'var(--acid)' : 'var(--s2)'};border:1px solid ${inQ ? 'var(--acid)' : 'var(--border)'};color:${inQ ? '#1a2000' : 'var(--dim)'};width:30px;height:30px;border-radius:4px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;"><span class="ms" style="font-size:15px;">${inQ ? 'check' : 'add'}</span></button></div>`;
+        row.addEventListener('click', e => { if (!e.target.closest('button')) showTM(t.id); });
+        list.appendChild(row);
+      });
+    }
+    function filterLib() { renderLib(); }
+    function buildChips() {
+      const c = document.getElementById('gchips'); if (!c) return;
+      const genres = [...new Set(library.map(t => t.genre))]; c.innerHTML = '';
+      genres.forEach(g => { const ch = document.createElement('button'); ch.className = 'chip' + (activeChip === g ? ' active' : ''); ch.textContent = g; ch.onclick = () => { activeChip = activeChip === g ? '' : g; buildChips(); renderLib(); }; c.appendChild(ch); });
+    }
+
+    // HISTORY
+    function renderHistList() {
+      const list = document.getElementById('histlist'); if (!list) return; list.innerHTML = '';
+      histTracks.forEach(t => {
+        const row = document.createElement('div'); row.className = 'trow';
+        row.innerHTML = `<div class="tthumb">&#127925;</div><div class="tmeta"><div class="tname">${esc(t.title)}</div><div class="tartist">${esc(t.artist)}</div></div><div style="display:flex;align-items:center;gap:12px;flex-shrink:0;"><div style="text-align:right;"><div class="slabel" style="margin-bottom:2px;">KEY</div><div class="mono cyan" style="font-size:11px;">${t.key}</div></div><div style="text-align:right;"><div class="slabel" style="margin-bottom:2px;">BPM</div><div class="mono acid" style="font-size:11px;font-weight:700;">${t.bpm}</div></div></div>`;
+        list.appendChild(row);
+      });
+    }
+    function renderGBars() {
+      const c = document.getElementById('gbars'); if (!c) return;
+      [{ name: 'TECHNO', pct: 45, col: 'var(--acid)' }, { name: 'HOUSE', pct: 30, col: 'var(--cyan)' }, { name: 'ELECTRO', pct: 15, col: '#8dcdff' }, { name: 'AMBIENT', pct: 10, col: 'var(--dim)' }].forEach(g => { c.innerHTML += `<div><div style="display:flex;justify-content:space-between;font-family:'JetBrains Mono';font-size:9px;margin-bottom:3px;"><span style="color:var(--text);">${g.name}</span><span class="dim">${g.pct}%</span></div><div class="pbar" style="height:4px;"><div style="height:100%;background:${g.col};width:${g.pct}%;border-radius:2px;"></div></div></div>`; });
+    }
+    function renderPSess() {
+      const c = document.getElementById('psess'); if (!c) return; c.innerHTML = '';
+      PASTLINKS.forEach(s => { const card = document.createElement('div'); card.className = 'scard'; card.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;"><div><div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px;">${s.name}</div><div class="mono dim" style="font-size:9px;">${s.date}</div></div><span class="ms acid" style="font-size:15px;">arrow_forward_ios</span></div>`; card.onclick = () => notify('LOADING: ' + s.name.toUpperCase()); c.appendChild(card); });
+    }
+    function renderSessTable(data) {
+      const tb = document.getElementById('sessbody'); if (!tb) return; tb.innerHTML = '';
+      (data || SESSIONS).forEach(s => { tb.innerHTML += `<tr><td class="mono acid" style="font-weight:700;">${s.date}</td><td class="mono dim">${s.id}</td><td style="font-weight:600;">${s.venue}</td><td class="mono">${s.duration}</td><td class="mono acid">${s.bpm}</td><td class="mono cyan">${s.key}</td><td style="text-align:right;"><button onclick="notify('LOADING ${s.id}')" style="background:none;border:none;cursor:pointer;color:var(--dim);" onmouseover="this.style.color='var(--acid)'" onmouseout="this.style.color='var(--dim)'"><span class="ms" style="font-size:16px;">visibility</span></button></td></tr>`; });
+    }
+    function filterSess() { const q = document.getElementById('sesssearch').value.toLowerCase(); document.getElementById('sessbody').innerHTML = ''; renderSessTable(SESSIONS.filter(s => s.venue.toLowerCase().includes(q) || s.id.toLowerCase().includes(q))); }
+    function loadMoreHist() { histTracks.push({ title: 'Matrix Collapse', artist: 'DATA_WAVE', bpm: 129.0, key: 'Ebm' }, { title: 'Liquid Logic', artist: 'FLUX_NODE', bpm: 127.5, key: '3A' }); renderHistList(); notify('LOADED MORE TRACKS'); }
+    function exportCSV() { const rows = [['Title', 'Artist', 'BPM', 'Key'], ...histTracks.map(t => [t.title, t.artist, t.bpm, t.key])]; dlFile('neon_history.csv', rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')).join('\n'), 'text/csv'); notify('CSV EXPORTED'); }
+    function exportTXT() { let txt = 'NEON_SETLIST - PERFORMANCE LOG\nDate: Oct 24, 2023 | Venue: Club Horizon\n\n'; histTracks.forEach((t, i) => txt += `${String(i + 1).padStart(2, '0')}. ${t.title} - ${t.artist} (${t.bpm} BPM, ${t.key})\n`); dlFile('neon_history.txt', txt, 'text/plain'); notify('TXT EXPORTED'); }
+
+    // MANAGER
+    function renderMgr() {
+      const list = document.getElementById('mgrlist'); if (!list) return;
+      const s = (document.getElementById('mgrsearch')?.value || '').toLowerCase();
+      const tracks = setlist.filter(t => !s || t.title.toLowerCase().includes(s) || t.artist.toLowerCase().includes(s));
+      list.innerHTML = '';
+      tracks.forEach((t, i) => {
+        const row = document.createElement('div'); row.className = 'mtrow'; row.draggable = true;
+        if (i === 0) row.style.borderLeft = '3px solid var(--acid)';
+        row.innerHTML = `<div class="dhandle"><span class="ms" style="font-size:17px;">drag_indicator</span></div><div class="tthumb" style="width:40px;height:40px;">&#127925;</div><div style="min-width:0;flex:1;"><div class="tname" style="color:${i === 0 ? 'var(--acid)' : 'var(--text)'};">${esc(t.title)}</div><div class="tartist">${esc(t.artist)}</div></div><div class="mono acid" style="font-size:12px;font-weight:700;text-align:center;min-width:60px;">${t.bpm?.toFixed ? t.bpm.toFixed(1) : t.bpm}</div><div class="mono cyan" style="font-size:11px;text-align:center;min-width:50px;">${t.key}</div><div style="text-align:center;min-width:80px;"><span class="slabel" style="background:var(--s2);border:1px solid var(--border);border-radius:3px;padding:2px 5px;">${t.genre}</span></div><button onclick="rmSL(${i})" style="background:none;border:none;cursor:pointer;color:var(--border);display:flex;align-items:center;transition:color 0.15s;" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--border)'"><span class="ms" style="font-size:16px;">remove_circle</span></button>`;
+        row.addEventListener('dragstart', e => { dragSrc = i; dragList = 'mgr'; e.dataTransfer.effectAllowed = 'move'; });
+        row.addEventListener('dragover', e => { e.preventDefault(); row.style.background = 'rgba(195,244,0,0.03)'; });
+        row.addEventListener('dragleave', () => row.style.background = '');
+        row.addEventListener('drop', e => { e.preventDefault(); row.style.background = ''; if (dragList === 'mgr' && dragSrc !== i) { const m = setlist.splice(dragSrc, 1)[0]; setlist.splice(i, 0, m); save(); renderMgr(); notify('SETLIST REORDERED'); } });
+        list.appendChild(row);
+      });
+      updateMgrStats();
+    }
+    function rmSL(i) { setlist.splice(i, 1); save(); renderMgr(); notify('REMOVED FROM SETLIST'); }
+    function filterMgr() { renderMgr(); }
+    function setMT(tab) { ST.mgrTab = tab; document.querySelectorAll('.mgrtab').forEach(b => b.classList.toggle('active', b.dataset.mt === tab)); renderMgr(); notify('TAB: ' + tab.toUpperCase()); }
+    function autoMixOrd() { setlist.sort((a, b) => a.bpm - b.bpm); save(); renderMgr(); notify('AUTO-MIX ORDER APPLIED'); }
+    function publishSL() { notify('SETLIST PUBLISHED'); }
+    function updateMgrStats() {
+      if (!setlist.length) return;
+      const ts = setlist.reduce((a, t) => { const [m, s] = (t.duration || '6:00').split(':').map(Number); return a + m * 60 + (s || 0); }, 0);
+      const h = Math.floor(ts / 3600), m = Math.floor((ts % 3600) / 60), s = ts % 60;
+      const el = document.getElementById('mgrtime'); if (el) el.textContent = [h, m, s].map(v => String(v).padStart(2, '0')).join(':');
+      const ce = document.getElementById('mgrcount'); if (ce) ce.textContent = setlist.length;
+      const avg = setlist.reduce((a, t) => a + parseFloat(t.bpm), 0) / setlist.length;
+      const be = document.getElementById('mgrbpm'); if (be) be.textContent = avg.toFixed(1);
+      const nrg = Math.round((avg - 110) / 40 * 5);
+      const ee = document.getElementById('mgrenergy'); if (ee) { ee.innerHTML = ''; for (let i = 0; i < 5; i++)ee.innerHTML += `<div style="width:22px;height:5px;border-radius:2px;background:${i < nrg ? 'var(--acid)' : 'var(--s3)'}"></div>`; }
+    }
+
+    // IDENTIFY
+    function saveKeys() {
+      const h = document.getElementById('acrhost').value.trim();
+      const k = document.getElementById('acrkey').value.trim();
+      const s = document.getElementById('acrsecret').value.trim();
+      if (!h || !k || !s) { notify('Fill in all 3 fields', 'err'); return; }
+      ACR = { host: h, key: k, secret: s }; localStorage.setItem('ns_acr', JSON.stringify(ACR));
+      showKeySaved(); notify('API KEYS SAVED');
+    }
+    function showKeySaved() { document.getElementById('keyform').style.display = 'none'; document.getElementById('ksrow').style.display = 'flex'; }
+    function resetKeys() { localStorage.removeItem('ns_acr'); ACR = { host: '', key: '', secret: '' }; document.getElementById('keyform').style.display = 'block'; document.getElementById('ksrow').style.display = 'none'; notify('API KEYS CLEARED'); }
+
+    function buildViz() { const v = document.getElementById('viz'); if (!v) return; v.innerHTML = ''; for (let i = 0; i < 44; i++) { const b = document.createElement('div'); b.className = 'vbar'; v.appendChild(b); } }
+    function animViz() {
+      if (!analyser || !isListening) { document.querySelectorAll('.vbar').forEach(b => b.style.height = '6%'); return; }
+      const data = new Uint8Array(analyser.frequencyBinCount); analyser.getByteFrequencyData(data);
+      document.querySelectorAll('.vbar').forEach((b, i) => { const idx = Math.floor(i * data.length / 44); b.style.height = Math.max(4, (data[idx] / 255) * 90) + '%'; });
+      vizRaf = requestAnimationFrame(animViz);
+    }
+
+    async function toggleListen() {
+      if (!ACR.host || !ACR.key || !ACR.secret) { notify('Set up ACRCloud keys first', 'err'); return; }
+      if (isListening) { stopListen(); return; }
+      await startListen();
+    }
+
+    async function startListen() {
+      try { mstream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false }); }
+      catch (e) { setStxt('Microphone denied - allow mic access', 'error'); notify('MIC DENIED', 'err'); return; }
+      actx = new (window.AudioContext || window.webkitAudioContext)();
+      const src = actx.createMediaStreamSource(mstream); analyser = actx.createAnalyser(); analyser.fftSize = 256; src.connect(analyser);
+      isListening = true;
+      document.getElementById('lbtn').classList.add('listening');
+      document.getElementById('licon').textContent = 'stop'; document.getElementById('llbl').textContent = 'LISTENING';
+      document.getElementById('lpill').style.display = 'flex';
+      document.getElementById('sbar').classList.add('show');
+      document.getElementById('idcard').classList.add('show');
+      document.getElementById('idring').style.display = 'flex';
+      setStxt('Listening - first scan in 5 seconds...', 'active');
+      animViz();
+      setTimeout(() => { if (isListening) doScan(); }, 5000);
+      let cnt = 0;
+      scanIv = setInterval(() => {
+        cnt++; document.getElementById('sfill').style.width = (cnt / CFG.scanInt * 100) + '%';
+        const rem = CFG.scanInt - cnt; document.getElementById('nscantxt').textContent = rem > 0 ? `Next scan in ${rem}s` : 'Scanning...';
+        if (cnt >= CFG.scanInt) { cnt = 0; doScan(); }
+      }, 1000);
+    }
+
+    function stopListen() {
+      isListening = false;
+      if (scanIv) { clearInterval(scanIv); scanIv = null; }
+      if (vizRaf) { cancelAnimationFrame(vizRaf); vizRaf = null; }
+      if (mstream) { mstream.getTracks().forEach(t => t.stop()); mstream = null; }
+      if (actx) { actx.close(); actx = null; } analyser = null;
+      document.getElementById('lbtn').classList.remove('listening');
+      document.getElementById('licon').textContent = 'mic'; document.getElementById('llbl').textContent = 'TAP TO ID';
+      document.getElementById('lpill').style.display = 'none';
+      document.getElementById('sbar').classList.remove('show');
+      document.getElementById('sfill').style.width = '0%';
+      document.getElementById('nscantxt').textContent = '';
+      document.getElementById('idring').style.display = 'none';
+      document.querySelectorAll('.vbar').forEach(b => b.style.height = '6%');
+      setStxt(`Stopped - ${tracklist.length} tracks identified`);
+      notify(`STOPPED - ${tracklist.length} TRACKS`);
+    }
+
+    async function doScan() {
+      if (!isListening || !mstream) return;
+      totalScans++; document.getElementById('stscans').textContent = totalScans;
+      setStxt('Fingerprinting audio...', 'active');
+      let blob;
+      try { blob = await recAudio(10000); } catch (e) { setStxt('Recording error: ' + e.message, 'error'); return; }
+      setStxt('Sending to ACRCloud...', 'active');
+      try { const r = await queryACR(blob); handleACR(r); } catch (e) { setStxt('ACRCloud error - check API keys', 'error'); console.error(e); }
+    }
+
+    function recAudio(ms) {
+      return new Promise((res, rej) => {
+        if (!mstream) { rej(new Error('No stream')); return; }
+        const mime = ['audio/webm;codecs=opus', 'audio/webm', 'audio/ogg;codecs=opus', 'audio/mp4'].find(t => MediaRecorder.isTypeSupported(t)) || '';
+        const rec = new MediaRecorder(mstream, mime ? { mimeType: mime } : {}); const chunks = [];
+        rec.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
+        rec.onstop = () => res(new Blob(chunks, { type: rec.mimeType }));
+        rec.onerror = e => rej(e.error);
+        rec.start(); setTimeout(() => { if (rec.state !== 'inactive') rec.stop(); }, ms);
+      });
+    }
+
+    async function queryACR(blob) {
+      const ts = Math.floor(Date.now() / 1000);
+      const sig = await hmac(ACR.secret, `POST\n/v1/identify\n${ACR.key}\naudio\n1\n${ts}`);
+      const fd = new FormData();
+      fd.append('sample', blob, 'audio.webm'); fd.append('access_key', ACR.key); fd.append('data_type', 'audio');
+      fd.append('signature_version', '1'); fd.append('signature', sig); fd.append('sample_bytes', blob.size); fd.append('timestamp', ts);
+      const r = await fetch(`https://${ACR.host}/v1/identify`, { method: 'POST', body: fd });
+      if (!r.ok) throw new Error('HTTP ' + r.status); return r.json();
+    }
+
+    async function hmac(secret, msg) {
+      const enc = new TextEncoder();
+      const key = await crypto.subtle.importKey('raw', enc.encode(secret), { name: 'HMAC', hash: 'SHA-1' }, false, ['sign']);
+      const sig = await crypto.subtle.sign('HMAC', key, enc.encode(msg));
+      return btoa(String.fromCharCode(...new Uint8Array(sig)));
+    }
+
+    function handleACR(data) {
+      console.log('ACRCloud:', data);
+      if (data.status?.code === 0 && data.metadata?.music?.length > 0) processTrack(data.metadata.music[0]);
+      else if (data.status?.code === 1001) setStxt('No music detected - is audio playing?', 'warn');
+      else if (data.status?.code === 3003) { setStxt('API quota exceeded', 'error'); notify('QUOTA EXCEEDED', 'err'); }
+      else if (data.status?.code === 3000) { setStxt('Auth failed - check API keys', 'error'); notify('AUTH FAILED', 'err'); }
+      else setStxt('No match - track may be unreleased', 'warn');
+    }
+
+    function processTrack(m) {
+      const title = m.title || 'Unknown Track';
+      const artist = m.artists?.[0]?.name || m.artist || 'Unknown Artist';
+      const album = m.album?.name || ''; const label = m.label || '';
+      const bpm = m.tempo ? Math.round(m.tempo) : null; const score = m.score || 85;
+      const art = m.album?.artwork?.[0] || null; const genre = m.genres?.[0]?.name || '';
+      const k = `${title}|${artist}`.toLowerCase();
+      const isNew = k !== lastKey;
+      if (!isNew && CFG.dedup) { setStxt(`Still playing: ${title} - ${artist}`, 'active'); return; }
+      lastKey = k;
+      document.getElementById('idtitle').textContent = title;
+      document.getElementById('idartist').textContent = artist;
+      if (art) document.getElementById('idart').innerHTML = `<img src="${art}" alt="art" onerror="this.parentElement.textContent='&#127925;'">`;
+      else document.getElementById('idart').textContent = '&#127925;';
+      const be = document.getElementById('idbpm'); if (bpm) { be.textContent = bpm + ' BPM'; be.style.display = 'inline-flex'; } else be.style.display = 'none';
+      const le = document.getElementById('idlabel'); if (label) { le.textContent = label; le.style.display = 'inline-flex'; } else le.style.display = 'none';
+      if (genre) document.getElementById('idgtag').textContent = genre;
+      document.getElementById('idnewtag').style.display = isNew ? 'inline-flex' : 'none';
+      const conf = Math.min(100, Math.round(score));
+      document.getElementById('conff').style.width = conf + '%'; document.getElementById('confpct').textContent = conf + '%';
+      const entry = { num: tracklist.length + 1, title, artist, album, label, bpm, art, genre, confidence: conf, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), ts: Date.now() };
+      tracklist.push(entry); save(); renderTL(); updateStats(); updateBadge();
+      setStxt(`${title} - ${artist}`, 'active'); notify('ID: ' + title.substring(0, 24));
+    }
+
+    // TRACKLIST
+    function renderTL() {
+      const wrap = document.getElementById('tlwrap'); const empty = document.getElementById('tlempty');
+      wrap.querySelectorAll('.trow').forEach(el => el.remove());
+      if (!tracklist.length) { empty.style.display = 'flex'; return; } empty.style.display = 'none';
+      [...tracklist].reverse().forEach((t, i) => {
+        const el = document.createElement('div'); el.className = 'trow' + (i === 0 ? ' nid' : '');
+        el.innerHTML = `<div class="mono dim" style="font-size:10px;min-width:22px;text-align:right;">${t.num}</div><div class="tthumb">${t.art ? `<img src="${t.art}" alt="art" onerror="this.parentElement.textContent='&#127925;'">` : ''}</div><div class="tmeta"><div class="tname">${esc(t.title)}</div><div class="tartist">${esc(t.artist)}</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px;flex-shrink:0;">${t.bpm ? `<span class="mono acid" style="font-size:11px;font-weight:700;">${t.bpm}</span>` : ''}<span class="mono dim" style="font-size:9px;">${t.time}</span></div>`;
+        wrap.appendChild(el);
+      });
+    }
+    function updateStats() {
+      document.getElementById('stcount').textContent = tracklist.length;
+      const bpms = tracklist.filter(t => t.bpm).map(t => t.bpm);
+      document.getElementById('stbpm').textContent = bpms.length ? Math.round(bpms.reduce((a, b) => a + b, 0) / bpms.length) : '-';
+    }
+    function updateBadge() { const b = document.getElementById('tbbadge'); if (tracklist.length > 0) { b.textContent = tracklist.length > 99 ? '99+' : tracklist.length; b.style.display = 'inline-block'; } else b.style.display = 'none'; }
+    function clearTL() { if (!tracklist.length) return; if (!confirm(`Clear all ${tracklist.length} tracks?`)) return; tracklist = []; lastKey = null; save(); renderTL(); updateStats(); updateBadge(); notify('TRACKLIST CLEARED'); }
+    function doExport(fmt) {
+      if (!tracklist.length) { notify('No tracks to export', 'err'); return; }
+      if (fmt === 'txt') { let txt = `NEON_SETLIST - TRACK ID\nDate: ${new Date().toLocaleDateString()} - ${tracklist.length} tracks\n${'='.repeat(50)}\n\n`; tracklist.forEach(t => { txt += `${String(t.num).padStart(2, '0')}. ${t.title}\n    Artist: ${t.artist}\n`; if (t.bpm) txt += `    BPM: ${t.bpm}\n`; txt += `    Time: ${t.time}\n\n`; }); dlFile('neon_tracklist.txt', txt, 'text/plain'); }
+      else { const rows = [['#', 'Title', 'Artist', 'BPM', 'Label', 'Time'], ...tracklist.map(t => [t.num, t.title, t.artist, t.bpm || '', t.label || '', t.time])]; dlFile('neon_tracklist.csv', rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')).join('\n'), 'text/csv'); }
+      notify('EXPORTED');
+    }
+    function copyTL() { if (!tracklist.length) { notify('Nothing to copy', 'err'); return; } navigator.clipboard.writeText(tracklist.map(t => `${t.num}. ${t.title} - ${t.artist}${t.bpm ? ` [${t.bpm} BPM]` : ''}`).join('\n')).then(() => notify('COPIED')); }
+
+    // MODALS
+    function showTM(id) {
+      const t = library.find(x => x.id === id); if (!t) return; curTrackModal = t;
+      const inQ = queue.some(q => q.id === id);
+      document.getElementById('mcontent').innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;"><span class="mono acid" style="font-size:12px;font-weight:700;letter-spacing:0.08em;">TRACK DETAILS</span><button onclick="closeModal()" style="background:none;border:none;cursor:pointer;color:var(--dim);display:flex;"><span class="ms">close</span></button></div><div style="display:flex;gap:14px;align-items:flex-start;margin-bottom:14px;"><div class="tthumb" style="width:64px;height:64px;font-size:26px;">&#127925;</div><div><div style="font-size:15px;font-weight:700;color:var(--acid);margin-bottom:3px;">${esc(t.title)}</div><div class="mono dim" style="font-size:10px;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;">${esc(t.artist)}</div><span class="slabel" style="background:var(--s2);border:1px solid var(--border);border-radius:3px;padding:2px 6px;">${t.genre}</span></div></div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;"><div class="sbox"><div class="slbltxt">BPM</div><div class="sval">${t.bpm}</div></div><div class="sbox"><div class="slbltxt">KEY</div><div class="sval cv">${t.key}</div></div><div class="sbox"><div class="slbltxt">DURATION</div><div class="sval wh">${t.duration || '-'}</div></div></div>${inQ ? '<div style="background:rgba(195,244,0,0.08);border:1px solid rgba(195,244,0,0.2);border-radius:4px;padding:8px;font-family:\'JetBrains Mono\';font-size:10px;color:var(--acid);text-align:center;margin-bottom:12px;">ALREADY IN QUEUE</div>' : ''}<div style="display:flex;gap:8px;flex-wrap:wrap;"><button onclick="addToQ(curTrackModal);closeModal();" class="btn btnp btnfull" style="flex:1;justify-content:center;font-size:10px;"><span class="ms" style="font-size:14px;">queue_music</span>ADD TO QUEUE</button><button onclick="addToSLM();closeModal();" class="btn btns" style="flex:1;justify-content:center;font-size:10px;"><span class="ms" style="font-size:14px;">playlist_add</span>ADD TO SETLIST</button><button onclick="delTrack();closeModal();" class="btn btns btnd" style="font-size:10px;padding:9px 12px;"><span class="ms" style="font-size:14px;">delete</span></button></div>`;
+      openModal();
+    }
+    function addToSLM() { if (!curTrackModal) return; if (!setlist.find(t => t.id === curTrackModal.id)) { setlist.push({ ...curTrackModal }); save(); renderMgr(); } notify('ADDED TO SETLIST: ' + curTrackModal.title.substring(0, 20)); }
+    function delTrack() { if (!curTrackModal) return; library = library.filter(t => t.id !== curTrackModal.id); queue = queue.filter(t => t.id !== curTrackModal.id); setlist = setlist.filter(t => t.id !== curTrackModal.id); save(); renderLib(); renderQ(); renderMgr(); notify('TRACK DELETED'); }
+
+    function openAddTrack() {
+      document.getElementById('mcontent').innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;"><span class="mono acid" style="font-size:12px;font-weight:700;letter-spacing:0.08em;">ADD TRACK</span><button onclick="closeModal()" style="background:none;border:none;cursor:pointer;color:var(--dim);display:flex;"><span class="ms">close</span></button></div><div style="display:flex;flex-direction:column;gap:10px;"><div><label class="flabel">TRACK TITLE</label><input class="nsin" id="nt_t" type="text" placeholder="e.g. CYBER_DRIVE"></div><div><label class="flabel">ARTIST</label><input class="nsin" id="nt_a" type="text" placeholder="e.g. NEON_ARCHITECT"></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;"><div><label class="flabel">BPM</label><input class="nsin" id="nt_b" type="number" placeholder="128" min="60" max="220"></div><div><label class="flabel">KEY</label><input class="nsin" id="nt_k" type="text" placeholder="8A"></div><div><label class="flabel">DURATION</label><input class="nsin" id="nt_d" type="text" placeholder="06:30"></div></div><div><label class="flabel">GENRE</label><select class="nssel" id="nt_g" style="width:100%;"><option>TECHNO</option><option>HOUSE</option><option>ELECTRO</option><option>AMBIENT</option><option>INDUSTRIAL</option><option>ACID</option><option>GLITCH</option></select></div><div><label class="flabel">ADD TO</label><select class="nssel" id="nt_dest" style="width:100%;"><option value="queue">Live Queue</option><option value="lib">Library Only</option><option value="mgr">Setlist Manager</option></select></div></div><div style="display:flex;gap:8px;margin-top:14px;justify-content:flex-end;"><button onclick="closeModal()" class="btn btns">CANCEL</button><button onclick="submitTrack()" class="btn btnp"><span class="ms" style="font-size:14px;">add</span>ADD TRACK</button></div>`;
+      openModal();
+    }
+    function submitTrack() {
+      const title = document.getElementById('nt_t').value.trim().toUpperCase();
+      const artist = document.getElementById('nt_a').value.trim().toUpperCase();
+      const bpm = parseFloat(document.getElementById('nt_b').value) || 128;
+      const key = document.getElementById('nt_k').value.trim().toUpperCase() || '8A';
+      const duration = document.getElementById('nt_d').value.trim() || '06:00';
+      const genre = document.getElementById('nt_g').value;
+      const dest = document.getElementById('nt_dest').value;
+      if (!title || !artist) { notify('Fill in title and artist', 'err'); return; }
+      const track = { id: ++nextId, title, artist, bpm, key, duration, genre };
+      library.push(track);
+      if (dest === 'queue') queue.push({ ...track }); else if (dest === 'mgr') setlist.push({ ...track });
+      save(); renderLib(); renderQ(); renderMgr(); buildChips(); closeModal(); notify('TRACK ADDED: ' + title.substring(0, 20));
+    }
+
+    function openSettings() {
+      document.getElementById('mcontent').innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;"><span class="mono acid" style="font-size:12px;font-weight:700;letter-spacing:0.08em;">SETTINGS</span><button onclick="closeModal()" style="background:none;border:none;cursor:pointer;color:var(--dim);display:flex;"><span class="ms">close</span></button></div><div style="display:flex;flex-direction:column;gap:10px;"><div><label class="flabel">DJ NAME</label><input class="nsin" id="s_name" type="text" value="${esc(ST.djName)}"></div><div><label class="flabel">MASTER BPM</label><input class="nsin" id="s_bpm" type="number" value="${ST.bpm}" min="60" max="220"></div><div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--s2);border:1px solid var(--border);border-radius:4px;"><div><div class="mono dim2" style="font-size:11px;">SKIP DUPLICATES</div><div class="slabel" style="margin-top:2px;">Don't ID same track twice in a row</div></div><button class="toggle ${CFG.dedup ? 'on' : 'off'}" id="s_dedup" onclick="this.className='toggle '+(this.className.includes('on')?'off':'on');"><div class="tknob"></div></button></div><div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--s2);border:1px solid var(--border);border-radius:4px;"><div><div class="mono dim2" style="font-size:11px;">SCAN INTERVAL</div><div class="slabel" style="margin-top:2px;">How often to fingerprint</div></div><select class="nssel" id="s_int"><option value="10" ${CFG.scanInt === 10 ? 'selected' : ''}>10s</option><option value="15" ${CFG.scanInt === 15 ? 'selected' : ''}>15s</option><option value="20" ${CFG.scanInt === 20 ? 'selected' : ''}>20s</option><option value="30" ${CFG.scanInt === 30 ? 'selected' : ''}>30s</option></select></div></div><div style="display:flex;gap:8px;margin-top:14px;justify-content:flex-end;"><button onclick="closeModal()" class="btn btns">CANCEL</button><button onclick="saveSettings()" class="btn btnp">SAVE</button></div>`;
+      openModal();
+    }
+    function saveSettings() {
+      const n = document.getElementById('s_name').value.trim();
+      const b = parseFloat(document.getElementById('s_bpm').value);
+      const i = parseInt(document.getElementById('s_int').value);
+      const d = document.getElementById('s_dedup').className.includes('on');
+      if (n) ST.djName = n;
+      if (b >= 60 && b <= 220) { ST.bpm = b; document.getElementById('masterbpm').textContent = b.toFixed(2); document.getElementById('libsync').textContent = b.toFixed(2); }
+      CFG.scanInt = i || 15; CFG.dedup = d;
+      save(); localStorage.setItem('ns_cfg', JSON.stringify(CFG)); closeModal(); notify('SETTINGS SAVED');
+    }
+
+    function openModal() { const o = document.getElementById('modal'); o.style.display = 'flex'; setTimeout(() => document.getElementById('mbox').style.transform = 'scale(1)', 10); }
+    function closeModal() { const o = document.getElementById('modal'); o.style.display = 'none'; document.getElementById('mbox').style.transform = 'scale(0.97)'; }
+
+    // UTILS
+    function setStxt(msg, type = '') { const el = document.getElementById('stxt'); el.textContent = msg; el.className = 'stxt' + (type ? ' ' + type : ''); }
+    let nto = null;
+    function notify(msg, type = '') { const el = document.getElementById('notif'); el.textContent = msg; el.className = 'show' + (type === 'err' ? ' err' : ''); clearTimeout(nto); nto = setTimeout(() => el.classList.remove('show'), 2800); }
+    function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+    function dlFile(name, content, type) { const blob = new Blob([content], { type }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; a.click(); }
+
+    init();
+  </script>
+</body>
+
+</html>
